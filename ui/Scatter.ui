@@ -91,6 +91,16 @@
     <number>10</number>
    </property>
   </widget>
+  <widget class="QgsFieldComboBox" name="Field3">
+   <property name="geometry">
+    <rect>
+     <x>310</x>
+     <y>230</y>
+     <width>160</width>
+     <height>29</height>
+    </rect>
+   </property>
+  </widget>
  </widget>
  <customwidgets>
   <customwidget>
@@ -151,6 +161,22 @@
     <hint type="destinationlabel">
      <x>128</x>
      <y>163</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>LayerCombo</sender>
+   <signal>layerChanged(QgsMapLayer*)</signal>
+   <receiver>Field3</receiver>
+   <slot>setLayer(QgsMapLayer*)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>137</x>
+     <y>33</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>404</x>
+     <y>237</y>
     </hint>
    </hints>
   </connection>

@@ -56,6 +56,11 @@ class ScatterPlotDialog(QtGui.QDialog, FORM_CLASS):
         lay2 = self.Field2.layer()
         lay2_f = self.Field2.currentField()
 
+        # layer for the point size
+        lay3 = self.Field3.layer()
+        lay3_f = self.Field3.currentField()
+
+
 
 
         # build the lists from the selected fields
@@ -67,6 +72,11 @@ class ScatterPlotDialog(QtGui.QDialog, FORM_CLASS):
         for i in lay2.getFeatures():
             f2.append(i[lay2_f])
 
+
+        f3 = []
+        for i in lay3.getFeatures():
+            f3.append(i[lay3_f])
+
         # legend checkbox (default is checked = True)
         if self.legendCheck.isChecked():
             legend = True
@@ -77,7 +87,7 @@ class ScatterPlotDialog(QtGui.QDialog, FORM_CLASS):
 
         plotly.offline.plot({
         "data": [
-            Scatter(x=f1, y=f2, mode='markers', marker = dict(size = S, color = 'rgba(255, 182, 193, .9)'))
+            Scatter(x=f1, y=f2, mode='markers', marker = dict(size = f3, color = 'rgba(255, 182, 193, .9)'))
         ],
         "layout": Layout(
             showlegend=legend
