@@ -22,62 +22,63 @@
 """
 
 import os
+
 from PyQt4 import QtGui, uic
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from PyQt4.QtWebKit import QWebView
 from qgis.gui import *
 import plotly
-from plotly.graph_objs import Scatter, Box, Layout
-
-
+from plotly.graph_objs import Bar, Layout
 
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
-    os.path.dirname(__file__), 'ui/data_plot_dialog_base.ui'))
+    os.path.dirname(__file__), 'ui/Bar.ui'))
 
-
-class DataPlotDialog(QtGui.QDialog, FORM_CLASS):
+class BarPlotDialog(QtGui.QDialog, FORM_CLASS):
     def __init__(self, parent=None):
         """Constructor."""
-        super(DataPlotDialog, self).__init__(parent)
+        super(BarPlotDialog, self).__init__(parent)
         # Set up the user interface from Designer.
         # After setupUI you can access any designer object by doing
         # self.<objectname>, and you can use autoconnect slots - see
         # http://qt-project.org/doc/qt-4.8/designer-using-a-ui-file.html
         # #widgets-and-dialogs-with-auto-connect
         self.setupUi(self)
-        self.scatterButton.clicked.connect(self.ScatterPlot)
-        self.boxplotButton.clicked.connect(self.BoxPlot)
-        self.barplotButton.clicked.connect(self.BarPlot)
-
-    # Each function is linked to the button and it imports and allows to run the code of that plot type
-
-    # Open simple scatter plot dialog
-    def ScatterPlot(self):
-        import scatter_dialog as Scatter
-        dlg = Scatter.ScatterPlotDialog()
-        # show the dialog
-        dlg.show()
-        # Run the dialog event loop
-        dlg.exec_()
+        self.buttonBox.button(QDialogButtonBox.Ok).clicked.connect(self.Bar)
 
 
-    # Open boxplot dialog
-    def BoxPlot(self):
-        import box_dialog as Box
-        dlg = Box.BoxPlotDialog()
-        # show the dialog
-        dlg.show()
-        # Run the dialog event loop
-        dlg.exec_()
+    def Bar(self):
+
+        # get layer and the selected fields (signals and update directly in the UI)
+        lay1 = self.Field1.layer()
+        lay1_f = self.Field1.currentField()
+        lay2 = self.Field2.layer()
+        lay2_f = self.Field2.currentField()
 
 
-    # Open barplot dialog
-    def BarPlot(self):
-        import bar_dialog as Bar
-        dlg = Bar.BarPlotDialog()
-        # show the dialog
-        dlg.show()
-        # Run the dialog event loop
-        dlg.exec_()
+        # build the lists from the selected fields
+        f1 = []
+        for i in lay1.getFeatures():
+            f1.append(i[lay1_f])
+
+        f2 = []
+        for i in lay2.getFeatures():
+            f2.append(i[lay2_f])
+
+        # legend checkbox (default is checked = True)
+        if self.legendCheck.isChecked():
+            legend = True
+        else:
+            legend = False
+
+        S = self.Size.value()
+
+        plotly.offline.plot({
+        "data": [
+            Bar(x=f1, y=f2)
+        ],
+        "layout": Layout(
+            showlegend=legend
+        ),
+        })
