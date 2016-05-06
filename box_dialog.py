@@ -29,7 +29,7 @@ from PyQt4.QtGui import *
 from PyQt4.QtWebKit import QWebView
 from qgis.gui import *
 import plotly
-from plotly.graph_objs import Box, Layout
+import plotly.graph_objs as go
 
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
@@ -79,13 +79,23 @@ class BoxPlotDialog(QtGui.QDialog, FORM_CLASS):
         else:
             sd = False
 
-        S = self.Size.value()
-
-        plotly.offline.plot({
-        "data": [
-        Box(x=f1, y=f2, boxmean = sd)
-        ],
-        "layout": Layout(
-        showlegend=legend
+        # initialize the Bar plot with the first trace
+        trace = go.Box(
+        x = f1,
+        y = f2,
+        boxmean=sd
         )
-        })
+
+        # build the data object
+        data = [trace]
+
+        # build the layout object
+        layout = go.Layout(
+        showlegend = legend
+        )
+
+        # build the final figure
+        fig = go.Figure(data=data, layout=layout)
+
+        # final function that draws the plot
+        plotly.offline.plot(fig)

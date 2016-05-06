@@ -29,7 +29,7 @@ from PyQt4.QtGui import *
 from PyQt4.QtWebKit import QWebView
 from qgis.gui import *
 import plotly
-from plotly.graph_objs import Scatter, Box, Layout
+import plotly.graph_objs as go
 
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
@@ -73,9 +73,9 @@ class ScatterPlotDialog(QtGui.QDialog, FORM_CLASS):
             f2.append(i[lay2_f])
 
 
-        f3 = []
-        for i in lay3.getFeatures():
-            f3.append(i[lay3_f])
+        # f3 = []
+        # for i in lay3.getFeatures():
+        #     f3.append(i[lay3_f])
 
         # legend checkbox (default is checked = True)
         if self.legendCheck.isChecked():
@@ -85,45 +85,29 @@ class ScatterPlotDialog(QtGui.QDialog, FORM_CLASS):
 
         S = self.Size.value()
 
-        plotly.offline.plot({
-        "data": [
-            Scatter(x=f1, y=f2, mode='markers', marker = dict(size = f3, color = 'rgba(255, 182, 193, .9)'))
-        ],
-        "layout": Layout(
-            showlegend=legend
-        ),
-        })
 
-def Box(self):
+        # initialize the Bar plot with the first trace
+        trace = go.Scatter(
+        x = f1,
+        y = f2,
+        mode = 'markers',
+        name = 'nome in legenda',
+        marker = dict(
+        size=30
+        )
+        )
 
-    # get layer and the selected fields (signals and update directly in the UI)
-    lay1 = self.Field1.layer()
-    lay1_f = self.Field1.currentField()
-    lay2 = self.Field2.layer()
-    lay2_f = self.Field2.currentField()
+        # build the data object
+        data = [trace]
 
-    # build the lists from the selected fields
-    f1 = []
-    for i in lay1.getFeatures():
-        f1.append(i[lay1_f])
+        # build the layout object
+        layout = go.Layout(
+        showlegend = legend,
+        title = 'Titolo'
+        )
 
-    f2 = []
-    for i in lay2.getFeatures():
-        f2.append(i[lay2_f])
+        # build the final figure
+        fig = go.Figure(data=data, layout=layout)
 
-    # legend choice
-    if self.legendCheck.isChecked():
-        leg = True
-    else:
-        leg = False
-
-
-    plot_type = Box
-    plotly.offline.plot({
-    "data": [
-    plot_type(x=f1, y=f2, boxmean = "sd")
-    ],
-    "layout": Layout(
-    showlegend=leg
-    )
-    })
+        # final function that draws the plot
+        plotly.offline.plot(fig)
