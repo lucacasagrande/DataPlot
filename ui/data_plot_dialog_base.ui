@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>565</width>
-    <height>408</height>
+    <height>564</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,8 +16,8 @@
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>200</x>
-     <y>350</y>
+     <x>210</x>
+     <y>510</y>
      <width>341</width>
      <height>32</height>
     </rect>
@@ -94,12 +94,47 @@
     <rect>
      <x>240</x>
      <y>190</y>
-     <width>151</width>
-     <height>121</height>
+     <width>181</width>
+     <height>131</height>
     </rect>
    </property>
    <property name="text">
     <string>Histogram</string>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normalon>:/plugins/DataPlot/icons/histogram.png</normalon>
+    </iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>64</width>
+     <height>64</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pieplotButton">
+   <property name="geometry">
+    <rect>
+     <x>70</x>
+     <y>360</y>
+     <width>181</width>
+     <height>131</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Pie</string>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normalon>:/plugins/DataPlot/icons/pie.png</normalon>
+    </iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>64</width>
+     <height>64</height>
+    </size>
    </property>
   </widget>
  </widget>
@@ -114,8 +149,8 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>418</x>
-     <y>364</y>
+     <x>428</x>
+     <y>524</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
@@ -130,8 +165,8 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>486</x>
-     <y>370</y>
+     <x>496</x>
+     <y>530</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>

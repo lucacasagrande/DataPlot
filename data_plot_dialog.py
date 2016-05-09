@@ -51,6 +51,7 @@ class DataPlotDialog(QtGui.QDialog, FORM_CLASS):
         self.boxplotButton.clicked.connect(self.BoxPlot)
         self.barplotButton.clicked.connect(self.BarPlot)
         self.histogramplotButton.clicked.connect(self.HistogramPlot)
+        self.pieplotButton.clicked.connect(self.PiePlot)
 
     # Each function is linked to the button and it imports and allows to run the code of that plot type
 
@@ -84,10 +85,20 @@ class DataPlotDialog(QtGui.QDialog, FORM_CLASS):
         dlg.exec_()
 
 
-    # Open barplot dialog
+    # Open histogram dialog
     def HistogramPlot(self):
         import plots.histogram_dialog as Histogram
         dlg = Histogram.HistogramPlotDialog()
+        # show the dialog
+        dlg.show()
+        # Run the dialog event loop
+        dlg.exec_()
+
+
+    # Open pie plot dialog
+    def PiePlot(self):
+        import plots.pie_dialog as Pie
+        dlg = Pie.PiePlotDialog()
         # show the dialog
         dlg.show()
         # Run the dialog event loop
