@@ -50,12 +50,13 @@ class DataPlotDialog(QtGui.QDialog, FORM_CLASS):
         self.scatterButton.clicked.connect(self.ScatterPlot)
         self.boxplotButton.clicked.connect(self.BoxPlot)
         self.barplotButton.clicked.connect(self.BarPlot)
+        self.histogramplotButton.clicked.connect(self.HistogramPlot)
 
     # Each function is linked to the button and it imports and allows to run the code of that plot type
 
     # Open simple scatter plot dialog
     def ScatterPlot(self):
-        import scatter_dialog as Scatter
+        import plots.scatter_dialog as Scatter
         dlg = Scatter.ScatterPlotDialog()
         # show the dialog
         dlg.show()
@@ -65,7 +66,7 @@ class DataPlotDialog(QtGui.QDialog, FORM_CLASS):
 
     # Open boxplot dialog
     def BoxPlot(self):
-        import box_dialog as Box
+        import plots.box_dialog as Box
         dlg = Box.BoxPlotDialog()
         # show the dialog
         dlg.show()
@@ -75,8 +76,18 @@ class DataPlotDialog(QtGui.QDialog, FORM_CLASS):
 
     # Open barplot dialog
     def BarPlot(self):
-        import bar_dialog as Bar
+        import plots.bar_dialog as Bar
         dlg = Bar.BarPlotDialog()
+        # show the dialog
+        dlg.show()
+        # Run the dialog event loop
+        dlg.exec_()
+
+
+    # Open barplot dialog
+    def HistogramPlot(self):
+        import plots.histogram_dialog as Histogram
+        dlg = Histogram.HistogramPlotDialog()
         # show the dialog
         dlg.show()
         # Run the dialog event loop

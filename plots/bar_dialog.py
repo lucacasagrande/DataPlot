@@ -33,7 +33,7 @@ import plotly.graph_objs as go
 
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
-    os.path.dirname(__file__), 'ui/Bar.ui'))
+    os.path.dirname(__file__), '../ui/Bar.ui'))
 
 class BarPlotDialog(QtGui.QDialog, FORM_CLASS):
     def __init__(self, parent=None):
@@ -46,6 +46,14 @@ class BarPlotDialog(QtGui.QDialog, FORM_CLASS):
         # #widgets-and-dialogs-with-auto-connect
         self.setupUi(self)
         self.buttonBox.button(QDialogButtonBox.Ok).clicked.connect(self.Bar)
+
+        # connect button to choose the file for local saving
+        self.browseButton.clicked.connect(self.saveFile)
+
+    # function to store the path of the opened folder when saving the plot
+    def saveFile(self):
+        self.filePath.setText(QFileDialog.getOpenFileName())
+
 
 
     def Bar(self):
@@ -91,5 +99,10 @@ class BarPlotDialog(QtGui.QDialog, FORM_CLASS):
         # build the final figure
         fig = go.Figure(data=data, layout=layout)
 
+
+        # name of the local file
+        name = self.filePath.text() + '.html'
+        name = str(name)
+
         # final function that draws the plot
-        plotly.offline.plot(fig)
+        plotly.offline.plot(fig, filename=name)

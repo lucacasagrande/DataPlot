@@ -33,33 +33,28 @@ import plotly.graph_objs as go
 
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
-    os.path.dirname(__file__), 'ui/Scatter.ui'))
+    os.path.dirname(__file__), '../ui/Box.ui'))
 
-class ScatterPlotDialog(QtGui.QDialog, FORM_CLASS):
+class BoxPlotDialog(QtGui.QDialog, FORM_CLASS):
     def __init__(self, parent=None):
         """Constructor."""
-        super(ScatterPlotDialog, self).__init__(parent)
+        super(BoxPlotDialog, self).__init__(parent)
         # Set up the user interface from Designer.
         # After setupUI you can access any designer object by doing
         # self.<objectname>, and you can use autoconnect slots - see
         # http://qt-project.org/doc/qt-4.8/designer-using-a-ui-file.html
         # #widgets-and-dialogs-with-auto-connect
         self.setupUi(self)
-        self.buttonBox.button(QDialogButtonBox.Ok).clicked.connect(self.Scatter)
+        self.buttonBox.button(QDialogButtonBox.Ok).clicked.connect(self.Box)
 
 
-    def Scatter(self):
+    def Box(self):
 
         # get layer and the selected fields (signals and update directly in the UI)
         lay1 = self.Field1.layer()
         lay1_f = self.Field1.currentField()
         lay2 = self.Field2.layer()
         lay2_f = self.Field2.currentField()
-
-        # layer for the point size
-        lay3 = self.Field3.layer()
-        lay3_f = self.Field3.currentField()
-
 
 
 
@@ -72,29 +67,23 @@ class ScatterPlotDialog(QtGui.QDialog, FORM_CLASS):
         for i in lay2.getFeatures():
             f2.append(i[lay2_f])
 
-
-        # f3 = []
-        # for i in lay3.getFeatures():
-        #     f3.append(i[lay3_f])
-
         # legend checkbox (default is checked = True)
         if self.legendCheck.isChecked():
             legend = True
         else:
             legend = False
 
-        S = self.Size.value()
-
+        # standard deviation checkbox (default is checked = False)
+        if self.sdCheck.isChecked():
+            sd = True
+        else:
+            sd = False
 
         # initialize the Bar plot with the first trace
-        trace = go.Scatter(
+        trace = go.Box(
         x = f1,
         y = f2,
-        mode = 'markers',
-        name = 'nome in legenda',
-        marker = dict(
-        size=30
-        )
+        boxmean=sd
         )
 
         # build the data object
@@ -102,8 +91,7 @@ class ScatterPlotDialog(QtGui.QDialog, FORM_CLASS):
 
         # build the layout object
         layout = go.Layout(
-        showlegend = legend,
-        title = 'Titolo'
+        showlegend = legend
         )
 
         # build the final figure

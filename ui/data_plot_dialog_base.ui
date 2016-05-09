@@ -68,7 +68,7 @@
   <widget class="QPushButton" name="barplotButton">
    <property name="geometry">
     <rect>
-     <x>110</x>
+     <x>40</x>
      <y>180</y>
      <width>151</width>
      <height>141</height>
@@ -87,6 +87,19 @@
      <width>128</width>
      <height>128</height>
     </size>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="histogramplotButton">
+   <property name="geometry">
+    <rect>
+     <x>240</x>
+     <y>190</y>
+     <width>151</width>
+     <height>121</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Histogram</string>
    </property>
   </widget>
  </widget>
