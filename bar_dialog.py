@@ -72,7 +72,6 @@ class BarPlotDialog(QtGui.QDialog, FORM_CLASS):
         else:
             legend = False
 
-        S = self.Size.value()
 
 
         # initialize the Bar plot with the first trace
