@@ -84,6 +84,9 @@
      <height>33</height>
     </rect>
    </property>
+   <property name="placeholderText">
+    <string>Temporary file</string>
+   </property>
   </widget>
   <widget class="QToolButton" name="browseButton">
    <property name="geometry">

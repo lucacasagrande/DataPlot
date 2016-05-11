@@ -29,27 +29,7 @@
     <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
    </property>
   </widget>
-  <widget class="QgsFieldComboBox" name="Field2">
-   <property name="geometry">
-    <rect>
-     <x>80</x>
-     <y>160</y>
-     <width>160</width>
-     <height>29</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QgsFieldComboBox" name="Field1">
-   <property name="geometry">
-    <rect>
-     <x>70</x>
-     <y>90</y>
-     <width>160</width>
-     <height>29</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QgsMapLayerComboBox" name="LayerCombo">
+  <widget class="QgsMapLayerComboBox" name="layerCombo">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -78,8 +58,8 @@
   <widget class="QSpinBox" name="Size">
    <property name="geometry">
     <rect>
-     <x>470</x>
-     <y>150</y>
+     <x>80</x>
+     <y>220</y>
      <width>64</width>
      <height>33</height>
     </rect>
@@ -91,22 +71,121 @@
     <number>10</number>
    </property>
   </widget>
-  <widget class="QgsFieldComboBox" name="Field3">
+  <widget class="QgsFieldExpressionWidget" name="expField1">
    <property name="geometry">
     <rect>
-     <x>310</x>
-     <y>230</y>
+     <x>90</x>
+     <y>80</y>
+     <width>200</width>
+     <height>32</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QgsFieldExpressionWidget" name="expField2">
+   <property name="geometry">
+    <rect>
+     <x>100</x>
+     <y>140</y>
+     <width>200</width>
+     <height>32</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QgsColorButtonV2" name="colorButton">
+   <property name="geometry">
+    <rect>
+     <x>390</x>
+     <y>60</y>
+     <width>120</width>
+     <height>28</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QSlider" name="alpha">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>110</y>
      <width>160</width>
-     <height>29</height>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="cursor">
+    <cursorShape>ArrowCursor</cursorShape>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="minimum">
+    <number>0</number>
+   </property>
+   <property name="maximum">
+    <number>100</number>
+   </property>
+   <property name="singleStep">
+    <number>1</number>
+   </property>
+   <property name="value">
+    <number>1</number>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+   <property name="invertedAppearance">
+    <bool>false</bool>
+   </property>
+   <property name="invertedControls">
+    <bool>false</bool>
+   </property>
+   <property name="tickPosition">
+    <enum>QSlider::TicksAbove</enum>
+   </property>
+   <property name="tickInterval">
+    <number>10</number>
+   </property>
+  </widget>
+  <widget class="QSpinBox" name="spinBox">
+   <property name="geometry">
+    <rect>
+     <x>410</x>
+     <y>160</y>
+     <width>64</width>
+     <height>33</height>
+    </rect>
+   </property>
+   <property name="buttonSymbols">
+    <enum>QAbstractSpinBox::NoButtons</enum>
+   </property>
+   <property name="maximum">
+    <number>100</number>
+   </property>
+  </widget>
+  <widget class="QgsDataDefinedButton" name="dataDefined">
+   <property name="geometry">
+    <rect>
+     <x>170</x>
+     <y>220</y>
+     <width>30</width>
+     <height>26</height>
     </rect>
    </property>
   </widget>
  </widget>
  <customwidgets>
   <customwidget>
-   <class>QgsFieldComboBox</class>
-   <extends>QComboBox</extends>
-   <header>qgsfieldcombobox.h</header>
+   <class>QgsColorButtonV2</class>
+   <extends>QToolButton</extends>
+   <header>qgscolorbuttonv2.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QgsDataDefinedButton</class>
+   <extends>QToolButton</extends>
+   <header>qgsdatadefinedbutton.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QgsFieldExpressionWidget</class>
+   <extends>QWidget</extends>
+   <header>qgsfieldexpressionwidget.h</header>
   </customwidget>
   <customwidget>
    <class>QgsMapLayerComboBox</class>
@@ -133,50 +212,82 @@
    </hints>
   </connection>
   <connection>
-   <sender>LayerCombo</sender>
+   <sender>layerCombo</sender>
    <signal>layerChanged(QgsMapLayer*)</signal>
-   <receiver>Field1</receiver>
+   <receiver>expField1</receiver>
    <slot>setLayer(QgsMapLayer*)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>155</x>
-     <y>54</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>181</x>
-     <y>93</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>LayerCombo</sender>
-   <signal>layerChanged(QgsMapLayer*)</signal>
-   <receiver>Field2</receiver>
-   <slot>setLayer(QgsMapLayer*)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>31</x>
+     <x>64</x>
      <y>47</y>
     </hint>
     <hint type="destinationlabel">
-     <x>128</x>
-     <y>163</y>
+     <x>144</x>
+     <y>87</y>
     </hint>
    </hints>
   </connection>
   <connection>
-   <sender>LayerCombo</sender>
+   <sender>layerCombo</sender>
    <signal>layerChanged(QgsMapLayer*)</signal>
-   <receiver>Field3</receiver>
+   <receiver>expField2</receiver>
    <slot>setLayer(QgsMapLayer*)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>137</x>
-     <y>33</y>
+     <x>30</x>
+     <y>52</y>
     </hint>
     <hint type="destinationlabel">
-     <x>404</x>
-     <y>237</y>
+     <x>143</x>
+     <y>156</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>alpha</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>spinBox</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>418</x>
+     <y>114</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>428</x>
+     <y>162</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>alpha</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>467</x>
+     <y>178</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>463</x>
+     <y>122</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>dataDefined</sender>
+   <signal>dataDefinedActivated(bool)</signal>
+   <receiver>Size</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>194</x>
+     <y>234</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>116</x>
+     <y>234</y>
     </hint>
    </hints>
   </connection>

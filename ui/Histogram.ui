@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>504</width>
-    <height>379</height>
+    <width>552</width>
+    <height>416</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,8 +16,8 @@
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>150</x>
-     <y>330</y>
+     <x>180</x>
+     <y>360</y>
      <width>341</width>
      <height>32</height>
     </rect>
@@ -27,16 +27,6 @@
    </property>
    <property name="standardButtons">
     <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-   </property>
-  </widget>
-  <widget class="QgsFieldComboBox" name="Field1">
-   <property name="geometry">
-    <rect>
-     <x>80</x>
-     <y>80</y>
-     <width>160</width>
-     <height>29</height>
-    </rect>
    </property>
   </widget>
   <widget class="QCheckBox" name="legendCheck">
@@ -65,12 +55,96 @@
     </rect>
    </property>
   </widget>
+  <widget class="QgsFieldExpressionWidget" name="expField">
+   <property name="geometry">
+    <rect>
+     <x>270</x>
+     <y>230</y>
+     <width>200</width>
+     <height>32</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QgsColorButtonV2" name="colorButton">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>40</y>
+     <width>120</width>
+     <height>28</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QSlider" name="alpha">
+   <property name="geometry">
+    <rect>
+     <x>290</x>
+     <y>90</y>
+     <width>160</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="cursor">
+    <cursorShape>ArrowCursor</cursorShape>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="minimum">
+    <number>0</number>
+   </property>
+   <property name="maximum">
+    <number>100</number>
+   </property>
+   <property name="singleStep">
+    <number>1</number>
+   </property>
+   <property name="value">
+    <number>1</number>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+   <property name="invertedAppearance">
+    <bool>false</bool>
+   </property>
+   <property name="invertedControls">
+    <bool>false</bool>
+   </property>
+   <property name="tickPosition">
+    <enum>QSlider::TicksAbove</enum>
+   </property>
+   <property name="tickInterval">
+    <number>10</number>
+   </property>
+  </widget>
+  <widget class="QSpinBox" name="spinBox">
+   <property name="geometry">
+    <rect>
+     <x>360</x>
+     <y>140</y>
+     <width>64</width>
+     <height>33</height>
+    </rect>
+   </property>
+   <property name="buttonSymbols">
+    <enum>QAbstractSpinBox::NoButtons</enum>
+   </property>
+   <property name="maximum">
+    <number>100</number>
+   </property>
+  </widget>
  </widget>
  <customwidgets>
   <customwidget>
-   <class>QgsFieldComboBox</class>
-   <extends>QComboBox</extends>
-   <header>qgsfieldcombobox.h</header>
+   <class>QgsColorButtonV2</class>
+   <extends>QToolButton</extends>
+   <header>qgscolorbuttonv2.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QgsFieldExpressionWidget</class>
+   <extends>QWidget</extends>
+   <header>qgsfieldexpressionwidget.h</header>
   </customwidget>
   <customwidget>
    <class>QgsMapLayerComboBox</class>
@@ -87,8 +161,8 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>436</x>
-     <y>350</y>
+     <x>466</x>
+     <y>380</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>
@@ -99,16 +173,48 @@
   <connection>
    <sender>LayerCombo</sender>
    <signal>layerChanged(QgsMapLayer*)</signal>
-   <receiver>Field1</receiver>
+   <receiver>expField</receiver>
    <slot>setLayer(QgsMapLayer*)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>119</x>
-     <y>37</y>
+     <x>106</x>
+     <y>39</y>
     </hint>
     <hint type="destinationlabel">
-     <x>157</x>
-     <y>87</y>
+     <x>398</x>
+     <y>243</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>alpha</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>spinBox</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>343</x>
+     <y>99</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>391</x>
+     <y>162</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>alpha</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>389</x>
+     <y>142</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>389</x>
+     <y>100</y>
     </hint>
    </hints>
   </connection>
