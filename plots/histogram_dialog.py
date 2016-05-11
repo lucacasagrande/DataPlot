@@ -28,6 +28,8 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from PyQt4.QtWebKit import QWebView
 from qgis.gui import *
+from qgis.core import QgsExpression
+import matplotlib.colors as colors
 import plotly
 import plotly.graph_objs as go
 
@@ -51,15 +53,37 @@ class HistogramPlotDialog(QtGui.QDialog, FORM_CLASS):
     def Histogram(self):
 
         # get layer and the selected fields (signals and update directly in the UI)
-        lay1 = self.Field1.layer()
-        lay1_f = self.Field1.currentField()
+        # lay1 = self.Field1.layer()
+        lay1 = self.expField.layer()
+        # lay1_f = self.Field1.currentField()
+        lay1_f = self.expField.currentText()
 
 
 
         # build the lists from the selected fields
         f1 = []
-        for i in lay1.getFeatures():
-            f1.append(i[lay1_f])
+
+
+        # cicle to use normal field or selected expression
+        if self.expField.currentField()[1] == False:
+            for i in lay1.getFeatures():
+                f1.append(i[lay1_f])
+        else:
+            filter = self.expField.currentField()[0]
+            exp = QgsExpression(filter)
+            for i in lay1.getFeatures():
+                f1.append(exp.evaluate(i, lay1.pendingFields()))
+
+        # get the color button and the hex raw color code of the selected color
+        colbutton = self.colorButton
+        colorhex = colbutton.color().name()
+
+        # convert the hex color code to rgb code
+        colorrgb = colors.hex2color(colorhex)
+
+
+        # value of the slider for the alpha channel
+        alphavalue = self.alpha.value()
 
 
         # legend checkbox (default is checked = True)
@@ -71,6 +95,11 @@ class HistogramPlotDialog(QtGui.QDialog, FORM_CLASS):
         # initialize the Bar plot with the first trace
         trace = go.Histogram(
         x = f1,
+        # build the dictionary for the style (color, ecc..)
+        # color should be built by creating an unique string
+        marker = dict(color = 'rgb' + str(colorrgb)
+        ),
+        opacity = (100 - alphavalue) / 100.0
         )
 
         # build the data object
