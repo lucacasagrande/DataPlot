@@ -238,7 +238,8 @@ class ScatterPlotDialog(QtGui.QDialog, FORM_CLASS):
             # Generated linear fit
 
 
-
+        # initialize annotation list for regression equation
+        annotation = []
 
         # initialize the scatter plot with the first trace
         trace = []
@@ -270,27 +271,48 @@ class ScatterPlotDialog(QtGui.QDialog, FORM_CLASS):
                 slope, intercept, r_value, p_value, std_err = stats.linregress(xi,y)
                 line = slope*xi+intercept
 
+                # round values to 2 digit only
+                slope = float(format(slope, '.2f'))
+                intercept = float(format(intercept, '.2f'))
+                r_value = float(format(r_value, '.2f'))
+
                 trace2 = go.Scatter(
-                  x=xi,
-                  y=line,
-                  mode='lines',
-                  name='Fit'
+                  x = xi,
+                  y = line,
+                  mode = 'lines',
+                  name = 'Fit Line'
                 )
 
+                # text = '$R^2: ' + str(r_value**2) + ',' + '\\Y = ' + str(slope) + 'x ' + str(intercept) + '$'
+
+                if self.regressionEqCheck.isChecked():
+                    text = 'R2: ' + str(r_value**2) + '  Y = ' + str(slope) + 'x ' + str(intercept)
+
+                    annotation.append(go.Annotation(
+                      x = min(x),
+                      y = max(y),
+                      text = text,
+                      showarrow = False
+                      ))
+
+
                 trace.append(trace2)
+
+
 
 
 
         # build the data object with all the traces added
         data = trace
 
-        # build the layout object
+
+        # build the layout object without regression stuff
         layout = go.Layout(
         showlegend = legend,
         title = plotTitle,
         xaxis=dict(type = xAx),
         yaxis=dict(type = yAx),
-
+        annotations = annotation
         )
 
         # build the final figure
