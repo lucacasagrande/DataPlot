@@ -6,176 +6,386 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>578</width>
-    <height>385</height>
+    <width>726</width>
+    <height>554</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QDialogButtonBox" name="buttonBox">
-   <property name="geometry">
-    <rect>
-     <x>220</x>
-     <y>340</y>
-     <width>341</width>
-     <height>32</height>
-    </rect>
-   </property>
-   <property name="orientation">
-    <enum>Qt::Horizontal</enum>
-   </property>
-   <property name="standardButtons">
-    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-   </property>
-  </widget>
-  <widget class="QgsMapLayerComboBox" name="layerCombo">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>30</y>
-     <width>160</width>
-     <height>29</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QCheckBox" name="legendCheck">
-   <property name="geometry">
-    <rect>
-     <x>50</x>
-     <y>270</y>
-     <width>121</width>
-     <height>26</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Show Legend</string>
-   </property>
-   <property name="checked">
-    <bool>true</bool>
-   </property>
-  </widget>
-  <widget class="QSpinBox" name="Size">
-   <property name="geometry">
-    <rect>
-     <x>80</x>
-     <y>220</y>
-     <width>64</width>
-     <height>33</height>
-    </rect>
-   </property>
-   <property name="maximum">
-    <number>10000</number>
-   </property>
-   <property name="value">
-    <number>10</number>
-   </property>
-  </widget>
-  <widget class="QgsFieldExpressionWidget" name="expField1">
-   <property name="geometry">
-    <rect>
-     <x>90</x>
-     <y>80</y>
-     <width>200</width>
-     <height>32</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QgsFieldExpressionWidget" name="expField2">
-   <property name="geometry">
-    <rect>
-     <x>100</x>
-     <y>140</y>
-     <width>200</width>
-     <height>32</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QgsColorButtonV2" name="colorButton">
-   <property name="geometry">
-    <rect>
-     <x>390</x>
-     <y>60</y>
-     <width>120</width>
-     <height>28</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QSlider" name="alpha">
-   <property name="geometry">
-    <rect>
-     <x>340</x>
-     <y>110</y>
-     <width>160</width>
-     <height>18</height>
-    </rect>
-   </property>
-   <property name="cursor">
-    <cursorShape>ArrowCursor</cursorShape>
-   </property>
-   <property name="layoutDirection">
-    <enum>Qt::LeftToRight</enum>
-   </property>
-   <property name="minimum">
-    <number>0</number>
-   </property>
-   <property name="maximum">
-    <number>100</number>
-   </property>
-   <property name="singleStep">
-    <number>1</number>
-   </property>
-   <property name="value">
-    <number>1</number>
-   </property>
-   <property name="orientation">
-    <enum>Qt::Horizontal</enum>
-   </property>
-   <property name="invertedAppearance">
-    <bool>false</bool>
-   </property>
-   <property name="invertedControls">
-    <bool>false</bool>
-   </property>
-   <property name="tickPosition">
-    <enum>QSlider::TicksAbove</enum>
-   </property>
-   <property name="tickInterval">
-    <number>10</number>
-   </property>
-  </widget>
-  <widget class="QSpinBox" name="spinBox">
-   <property name="geometry">
-    <rect>
-     <x>410</x>
-     <y>160</y>
-     <width>64</width>
-     <height>33</height>
-    </rect>
-   </property>
-   <property name="buttonSymbols">
-    <enum>QAbstractSpinBox::NoButtons</enum>
-   </property>
-   <property name="maximum">
-    <number>100</number>
-   </property>
-  </widget>
-  <widget class="QgsDataDefinedButton" name="dataDefined">
-   <property name="geometry">
-    <rect>
-     <x>170</x>
-     <y>220</y>
-     <width>30</width>
-     <height>26</height>
-    </rect>
-   </property>
-  </widget>
+  <layout class="QGridLayout" name="gridLayout_3">
+   <item row="0" column="0" colspan="4">
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="tab">
+      <attribute name="title">
+       <string>Plot Settings</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_2">
+       <item row="0" column="0">
+        <layout class="QGridLayout" name="gridLayout">
+         <item row="1" column="0">
+          <widget class="QLabel" name="label_2">
+           <property name="text">
+            <string>X</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QgsMapLayerComboBox" name="LayerCombo"/>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="label_3">
+           <property name="text">
+            <string>Y</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QgsFieldExpressionWidget" name="expField1">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0">
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>Layer</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="3">
+          <widget class="QLabel" name="label_4">
+           <property name="text">
+            <string>Marker type</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1">
+          <widget class="QSpinBox" name="Size">
+           <property name="maximum">
+            <number>10000</number>
+           </property>
+           <property name="value">
+            <number>10</number>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="4">
+          <widget class="QSlider" name="alpha">
+           <property name="cursor">
+            <cursorShape>ArrowCursor</cursorShape>
+           </property>
+           <property name="layoutDirection">
+            <enum>Qt::LeftToRight</enum>
+           </property>
+           <property name="minimum">
+            <number>0</number>
+           </property>
+           <property name="maximum">
+            <number>100</number>
+           </property>
+           <property name="singleStep">
+            <number>1</number>
+           </property>
+           <property name="value">
+            <number>1</number>
+           </property>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="invertedAppearance">
+            <bool>false</bool>
+           </property>
+           <property name="invertedControls">
+            <bool>false</bool>
+           </property>
+           <property name="tickPosition">
+            <enum>QSlider::TicksAbove</enum>
+           </property>
+           <property name="tickInterval">
+            <number>10</number>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="4">
+          <widget class="QgsColorButtonV2" name="colorButton"/>
+         </item>
+         <item row="3" column="2">
+          <widget class="QgsDataDefinedButton" name="dataDefined"/>
+         </item>
+         <item row="1" column="3">
+          <widget class="QLabel" name="label_5">
+           <property name="text">
+            <string>Marker color</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="3">
+          <widget class="QLabel" name="label_6">
+           <property name="text">
+            <string>Transparency</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="4">
+          <widget class="QComboBox" name="symbolCombo">
+           <item>
+            <property name="text">
+             <string notr="true">markers</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string notr="true">lines</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string notr="true">markers+lines</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QgsFieldExpressionWidget" name="expField2">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <widget class="QLabel" name="label_7">
+           <property name="text">
+            <string>Size</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="5">
+          <widget class="QSpinBox" name="alphaBox">
+           <property name="buttonSymbols">
+            <enum>QAbstractSpinBox::NoButtons</enum>
+           </property>
+           <property name="maximum">
+            <number>100</number>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_2">
+      <attribute name="title">
+       <string>Layout Customization (optional)</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_5">
+       <item row="0" column="1">
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="0" column="0">
+        <layout class="QGridLayout" name="gridLayout_4">
+         <item row="2" column="0">
+          <widget class="QCheckBox" name="logXCheck">
+           <property name="text">
+            <string>Logarithmic X Axes</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QCheckBox" name="titleCheck">
+           <property name="text">
+            <string>Plot Title</string>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
+           </property>
+           <property name="checked">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QLineEdit" name="pltTitle">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="placeholderText">
+            <string>Title</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0">
+          <widget class="QCheckBox" name="legendCheck">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="text">
+            <string>Show Legend</string>
+           </property>
+           <property name="checked">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QCheckBox" name="logYCheck">
+           <property name="text">
+            <string>Logarithmic Y Axes</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QCheckBox" name="regressionCheck">
+           <property name="text">
+            <string>Show Regression Line</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="1" column="0" colspan="2">
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QPushButton" name="addTrace">
+     <property name="text">
+      <string>Add Trace</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QPushButton" name="deleteTrace">
+     <property name="text">
+      <string>Delete Trace</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0" colspan="4">
+    <widget class="QTableWidget" name="traceTable">
+     <column>
+      <property name="text">
+       <string>Trace ID</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Layer</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>X</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Y</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Size</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Marker Type</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Marker Color</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Transparency</string>
+      </property>
+     </column>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QLineEdit" name="filePath">
+     <property name="text">
+      <string>Temporary file</string>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="3">
+    <widget class="QToolButton" name="browseButton">
+     <property name="text">
+      <string>...</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="2">
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+  <zorder>buttonBox</zorder>
+  <zorder>tabWidget</zorder>
+  <zorder>filePath</zorder>
+  <zorder>browseButton</zorder>
+  <zorder>addTrace</zorder>
+  <zorder>deleteTrace</zorder>
+  <zorder>traceTable</zorder>
  </widget>
  <customwidgets>
   <customwidget>
    <class>QgsColorButtonV2</class>
    <extends>QToolButton</extends>
    <header>qgscolorbuttonv2.h</header>
+   <container>1</container>
   </customwidget>
   <customwidget>
    <class>QgsDataDefinedButton</class>
@@ -202,8 +412,8 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>506</x>
-     <y>360</y>
+     <x>684</x>
+     <y>544</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>
@@ -212,66 +422,66 @@
    </hints>
   </connection>
   <connection>
-   <sender>layerCombo</sender>
+   <sender>LayerCombo</sender>
    <signal>layerChanged(QgsMapLayer*)</signal>
    <receiver>expField1</receiver>
    <slot>setLayer(QgsMapLayer*)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>64</x>
-     <y>47</y>
+     <x>126</x>
+     <y>83</y>
     </hint>
     <hint type="destinationlabel">
-     <x>144</x>
-     <y>87</y>
+     <x>190</x>
+     <y>122</y>
     </hint>
    </hints>
   </connection>
   <connection>
-   <sender>layerCombo</sender>
+   <sender>LayerCombo</sender>
    <signal>layerChanged(QgsMapLayer*)</signal>
    <receiver>expField2</receiver>
    <slot>setLayer(QgsMapLayer*)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>30</x>
-     <y>52</y>
+     <x>92</x>
+     <y>83</y>
     </hint>
     <hint type="destinationlabel">
-     <x>143</x>
-     <y>156</y>
+     <x>190</x>
+     <y>161</y>
     </hint>
    </hints>
   </connection>
   <connection>
    <sender>alpha</sender>
    <signal>valueChanged(int)</signal>
-   <receiver>spinBox</receiver>
+   <receiver>alphaBox</receiver>
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>418</x>
-     <y>114</y>
+     <x>544</x>
+     <y>157</y>
     </hint>
     <hint type="destinationlabel">
-     <x>428</x>
+     <x>704</x>
      <y>162</y>
     </hint>
    </hints>
   </connection>
   <connection>
-   <sender>spinBox</sender>
+   <sender>alphaBox</sender>
    <signal>valueChanged(int)</signal>
    <receiver>alpha</receiver>
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>467</x>
-     <y>178</y>
+     <x>704</x>
+     <y>162</y>
     </hint>
     <hint type="destinationlabel">
-     <x>463</x>
-     <y>122</y>
+     <x>544</x>
+     <y>157</y>
     </hint>
    </hints>
   </connection>
@@ -282,12 +492,28 @@
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>194</x>
-     <y>234</y>
+     <x>325</x>
+     <y>197</y>
     </hint>
     <hint type="destinationlabel">
      <x>116</x>
-     <y>234</y>
+     <y>197</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>titleCheck</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>pltTitle</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>96</x>
+     <y>130</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>146</x>
+     <y>132</y>
     </hint>
    </hints>
   </connection>
