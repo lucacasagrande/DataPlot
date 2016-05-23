@@ -26,7 +26,7 @@
 #Add iso code for any locales you want to support here (space separated)
 # default is no locales
 # LOCALES = af
-LOCALES = en it
+LOCALES =
 
 # If locales are enabled, set the name of the lrelease binary on your system. If
 # you have trouble compiling the translations, you may have to specify the full path to
@@ -46,7 +46,7 @@ PY_FILES = \
 	__init__.py \
 	data_plot.py data_plot_dialog.py
 
-UI_FILES = data_plot_dialog_base.ui ui/*.ui
+UI_FILES = data_plot_dialog_base.ui
 
 EXTRAS = metadata.txt icon.png
 
