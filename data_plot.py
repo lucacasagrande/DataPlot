@@ -164,7 +164,7 @@ class DataPlot:
         icon_path = ':/plugins/DataPlot/icon.png'
         self.add_action(
             icon_path,
-            text=self.tr(u'Charts'),
+            text=self.tr(u'Plots'),
             callback=self.run,
             parent=self.iface.mainWindow())
 
