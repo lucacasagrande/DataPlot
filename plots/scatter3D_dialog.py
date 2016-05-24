@@ -214,6 +214,11 @@ class Scatter3DPlotDialog(QtGui.QDialog, FORM_CLASS):
 
     def Scatter3D(self):
 
+        # Check if the table is empty, that is if any plot has been defined
+        if self.traceTable.rowCount() == 0:
+            QMessageBox.warning(self, self.tr('Warning!'), self.tr('''You don't have defined any Plot! \nPlease add a plot with the Add Trace button!'''))
+            return
+            
         # Layout settings, these are the same for all the plots
 
 
