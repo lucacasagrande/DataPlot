@@ -28,10 +28,11 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from qgis.gui import *
 from qgis.core import QgsExpression, QgsVectorLayer
-import matplotlib.colors as colors
 import plotly
 import plotly.graph_objs as go
 import tempfile
+from utils import hex_to_rgb
+
 
 
 
@@ -130,12 +131,11 @@ class BarPlotDialog(QtGui.QDialog, FORM_CLASS):
                 f2.append(exp2.evaluate(i, lay2.pendingFields()))
 
 
-        # get the color button and the hex raw color code of the selected color
-        colbutton = self.colorButton
-        colorhex = colbutton.color().name()
+        # get the hex code from the button
+        colorhex = self.colorButton.color().name()
 
-        # convert the hex color code to rgb code
-        colorrgb = colors.hex2color(colorhex)
+        # convert the hex code to a rgb tuple
+        colorrgb = hex_to_rgb(colorhex)
 
 
         # value of the slider for the alpha channel
@@ -182,8 +182,13 @@ class BarPlotDialog(QtGui.QDialog, FORM_CLASS):
         else:
             legend = False
 
+        # plot title
+        plotTitle = self.pltTitle.text()
+
         # bar modes (grouped or stacked)
         bar = self.barCombo.currentText()
+
+        orientation = self.orientationCombo.currentText()
 
 
         # initialize the scatter plot with the first trace
@@ -203,7 +208,8 @@ class BarPlotDialog(QtGui.QDialog, FORM_CLASS):
             y = y,
             marker = dict(color = 'rgb' + str(color)),
             name = name,
-            opacity = (100 - transparency) / 100.0
+            opacity = (100 - transparency) / 100.0,
+            orientation = orientation
             ))
 
 
@@ -211,10 +217,26 @@ class BarPlotDialog(QtGui.QDialog, FORM_CLASS):
         data = trace
 
 
+        # Axis Label Options
+        xaxis = dict()
+        yaxis = dict()
+
+        if self.xAxisCheck.isChecked():
+            xaxis = dict(title = self.xAxisText.text())
+
+        if self.yAxisCheck.isChecked():
+            yaxis = dict(title = self.yAxisText.text())
+
+
+
+
         # build the layout object
         layout = go.Layout(
         showlegend = legend,
-        barmode = bar
+        barmode = bar,
+        xaxis = xaxis,
+        yaxis = yaxis,
+        title = plotTitle
         )
 
         # build the final figure

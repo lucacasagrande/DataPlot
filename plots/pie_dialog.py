@@ -28,7 +28,6 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from qgis.gui import *
 from qgis.core import QgsExpression, QgsVectorLayer
-import matplotlib.colors as colors
 import plotly
 import plotly.graph_objs as go
 import tempfile

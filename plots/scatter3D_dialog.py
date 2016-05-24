@@ -26,12 +26,12 @@ import os
 from PyQt4 import QtGui, uic
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-from PyQt4.QtWebKit import QWebView
 from qgis.gui import *
-from qgis.core import QgsExpression
-import matplotlib.colors as colors
+from qgis.core import QgsExpression, QgsVectorLayer
 import plotly
 import plotly.graph_objs as go
+import tempfile
+from utils import hex_to_rgb
 
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
@@ -49,8 +49,63 @@ class Scatter3DPlotDialog(QtGui.QDialog, FORM_CLASS):
         self.setupUi(self)
         self.buttonBox.button(QDialogButtonBox.Ok).clicked.connect(self.Scatter3D)
 
+        # connect button to choose the file for local saving
+        self.browseButton.clicked.connect(self.saveFile)
 
-    def Scatter3D(self):
+        # method to connect the changing layer to data defined button
+        self.LayerCombo.layerChanged.connect(self.updateData)
+
+        # filter only vector layers in the QgsMapLayerComboBox
+        self.LayerCombo.setFilters(QgsMapLayerProxyModel.VectorLayer)
+
+        # connect button to signals
+        self.addTrace.clicked.connect(self.addNewTrace)
+        self.deleteTrace.clicked.connect(self.removeTrace)
+
+        # get the initial index value for future iterations
+        self.index = 1
+
+        # initialize the dictionary that will store all the plot values
+        self.superdict = dict()
+
+
+
+    # function to store the path of the opened folder when saving the plot
+    def saveFile(self):
+        self.filePath.setText(QFileDialog.getOpenFileName())
+
+
+    # slot of data defined receive signal of MapLayerComboBox
+    @pyqtSlot(QgsVectorLayer)
+    def updateData(self, layer):
+        self.dataDefined.init(layer)
+
+
+
+    def addNewTrace(self):
+        '''
+        fill the table with the parameters added in the dialog
+        '''
+        row = self.traceTable.rowCount()
+        self.traceTable.insertRow(row)
+
+        # fill the table with each paramter entered
+        self.traceTable.setItem(row, 0, QTableWidgetItem(str(self.index)))
+        self.traceTable.setItem(row, 1, QTableWidgetItem(str(self.LayerCombo.currentText())))
+        self.traceTable.setItem(row, 2, QTableWidgetItem(str(self.expField1.currentText())))
+        self.traceTable.setItem(row, 3, QTableWidgetItem(str(self.expField2.currentText())))
+        self.traceTable.setItem(row, 4, QTableWidgetItem(str(self.expField3.currentText())))
+        if self.dataDefined.isActive():
+            self.traceTable.setItem(row, 5, QTableWidgetItem(str(self.dataDefined.getField())))
+        else:
+            self.traceTable.setItem(row, 5, QTableWidgetItem(str(self.Size.value())))
+        self.traceTable.setItem(row, 6, QTableWidgetItem(str(self.colorButton.color().name())))
+        self.traceTable.setItem(row, 7, QTableWidgetItem(str(self.alpha.value())))
+
+        self.index += 1
+
+
+        # get layer and the selected fields (signals and update directly in the UI)
 
         # get layer and the selected fields (signals and update directly in the UI)
         lay1 = self.expField1.layer()
@@ -59,10 +114,6 @@ class Scatter3DPlotDialog(QtGui.QDialog, FORM_CLASS):
         lay2_f = self.expField2.currentText()
         lay3 = self.expField3.layer()
         lay3_f = self.expField3.currentText()
-
-        # layer for the point size
-        # lay3 = self.Field3.layer()
-        # lay3_f = self.Field3.currentField()
 
 
         # build the lists from the selected fields
@@ -102,16 +153,69 @@ class Scatter3DPlotDialog(QtGui.QDialog, FORM_CLASS):
                 f3.append(exp3.evaluate(i, lay3.pendingFields()))
 
 
-        # get the color button and the hex raw color code of the selected color
-        colbutton = self.colorButton
-        colorhex = colbutton.color().name()
+        # get the hex code from the button
+        colorhex = self.colorButton.color().name()
 
-        # convert the hex color code to rgb code
-        colorrgb = colors.hex2color(colorhex)
+        # convert the hex code to a rgb tuple
+        colorrgb = hex_to_rgb(colorhex)
 
 
         # value of the slider for the alpha channel
         alphavalue = self.alpha.value()
+
+        # size settings
+        if self.dataDefined.isActive() == False:
+            markSize = self.Size.value()
+        else:
+            markSize = []
+            if self.dataDefined.useExpression() == True:
+                sizefilter = self.dataDefined.getExpression()
+                sizeexp = QgsExpression(sizefilter)
+                for i in self.LayerCombo.currentLayer().getFeatures():
+                    markSize.append(sizeexp.evaluate(i, self.LayerCombo.currentLayer().pendingFields()))
+            else:
+                for i in self.LayerCombo.currentLayer().getFeatures():
+                    markSize.append(i[self.dataDefined.getField()])
+
+
+
+        # create dictionary with all the plot parameters (each time the button is clicked a ner dictionary is added as VALUE to the initial dictionary)
+
+        self.plot_param = dict()
+        self.plot_param["index"] = self.index
+        self.plot_param["layer"] = (self.LayerCombo.currentLayer())
+        self.plot_param["X"]= f1
+        self.plot_param["Y"] = f2
+        self.plot_param["Z"] = f3
+        self.plot_param["Size"]= markSize
+        self.plot_param["Color"] = colorrgb
+        self.plot_param["Transparency"] = alphavalue
+        self.plot_param["Name"] = self.expField2.currentText()
+
+
+        # add the dictionary with plot values to the initial dictionary
+        self.superdict[row] = self.plot_param
+
+
+    def removeTrace(self):
+        '''
+        remove the selected rows in the table and delete the plot parameters from the dictionary
+        '''
+        selection = self.traceTable.selectionModel()
+        rows = selection.selectedRows()
+
+        for row in reversed(rows):
+            index = row.row()
+            self.traceTable.removeRow(row.row())
+            del self.superdict[row.row()]
+
+
+
+
+    def Scatter3D(self):
+
+        # Layout settings, these are the same for all the plots
+
 
         # legend checkbox (default is checked = True)
         if self.legendCheck.isChecked():
@@ -119,33 +223,62 @@ class Scatter3DPlotDialog(QtGui.QDialog, FORM_CLASS):
         else:
             legend = False
 
-        S = self.Size.value()
+
+        # plot title
+        plotTitle = self.pltTitle.text()
+
+        # initialize the scatter plot with the first trace
+        trace = []
+
+        # loop over the dictionary keys and add it to the list
+        for key in self.superdict:
+            x = self.superdict[key].get('X')
+            y = self.superdict[key].get('Y')
+            z = self.superdict[key].get('Z')
+            size = self.superdict[key].get('Size')
+            color = self.superdict[key].get('Color')
+            transparency = self.superdict[key].get('Transparency')
+            name = self.superdict[key].get('Name')
 
 
-        # initialize the Bar plot with the first trace
-        trace = go.Scatter3d(
-        x = f1,
-        y = f2,
-        z = f3,
-        mode = 'markers',
-        name = 'nome in legenda',
-        marker = dict(color = 'rgb' + str(colorrgb),
-        size=S,
-        opacity = (100 - alphavalue) / 100.0
-        )
-        )
+            # initialize the Bar plot with the first trace
+            trace.append(go.Scatter3d(
+            x = x,
+            y = y,
+            z = z,
+            mode = 'markers',
+            name = name,
+            marker = dict(color = 'rgb' + str(color),
+            size = size,
+            opacity = (100 - transparency) / 100.0
+            )))
 
-        # build the data object
-        data = [trace]
+        # build the data object with all the traces added
+        data = trace
 
         # build the layout object
         layout = go.Layout(
         showlegend = legend,
-        title = 'Titolo'
+        title = plotTitle
         )
+
 
         # build the final figure
         fig = go.Figure(data=data, layout=layout)
 
+
+        # name of the local temporary file (cross platform)
+        t = tempfile.gettempdir()
+
+        if self.filePath.text() == 'Temporary file':
+            name = t + u'/temp_plotly_plot.html'
+            name = str(name)
+        else:
+            name = self.filePath.text() + '.html'
+            name = str(name)
+
+        print self.filePath.text()
+
+
         # final function that draws the plot
-        plotly.offline.plot(fig)
+        plotly.offline.plot(fig, filename=name)

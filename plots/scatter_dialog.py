@@ -28,12 +28,12 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from qgis.gui import *
 from qgis.core import QgsExpression, QgsVectorLayer
-import matplotlib.colors as colors
 import plotly
 import plotly.graph_objs as go
 import tempfile
 from numpy import arange,array,ones
 from scipy import stats
+from utils import hex_to_rgb
 
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
@@ -145,12 +145,11 @@ class ScatterPlotDialog(QtGui.QDialog, FORM_CLASS):
                 f2.append(exp2.evaluate(i, lay2.pendingFields()))
 
 
-        # get the color button and the hex raw color code of the selected color
-        colbutton = self.colorButton
-        colorhex = colbutton.color().name()
+        # get the hex code from the button
+        colorhex = self.colorButton.color().name()
 
-        # convert the hex color code to rgb code
-        colorrgb = colors.hex2color(colorhex)
+        # convert the hex code to a rgb tuple
+        colorrgb = hex_to_rgb(colorhex)
 
 
         # value of the slider for the alpha channel
@@ -235,10 +234,8 @@ class ScatterPlotDialog(QtGui.QDialog, FORM_CLASS):
             yAx = '-'
 
 
-            # Generated linear fit
-
-
-
+        #initialize annotation list for regression equation
+        annotation = []
 
         # initialize the scatter plot with the first trace
         trace = []
@@ -247,7 +244,7 @@ class ScatterPlotDialog(QtGui.QDialog, FORM_CLASS):
         for key in self.superdict:
             x = self.superdict[key].get('X')
             y = self.superdict[key].get('Y')
-            siz = self.superdict[key].get('Size')
+            size = self.superdict[key].get('Size')
             mark = self.superdict[key].get('Marker')
             color = self.superdict[key].get('Color')
             transparency = self.superdict[key].get('Transparency')
@@ -259,7 +256,7 @@ class ScatterPlotDialog(QtGui.QDialog, FORM_CLASS):
             y = y,
             mode = mark,
             name = name,
-            marker = dict(color = 'rgb' + str(color), size = siz),
+            marker = dict(color = 'rgb' + str(color), size = size),
             opacity = (100 - transparency) / 100.0
             ))
 
@@ -270,16 +267,36 @@ class ScatterPlotDialog(QtGui.QDialog, FORM_CLASS):
                 slope, intercept, r_value, p_value, std_err = stats.linregress(xi,y)
                 line = slope*xi+intercept
 
+                # round values to 2 digit only
+                slope = float(format(slope, '.2f'))
+                intercept = float(format(intercept, '.2f'))
+                r_value = float(format(r_value, '.2f'))
+
                 trace2 = go.Scatter(
-                  x=xi,
-                  y=line,
-                  mode='lines',
-                  name='Fit'
+                  x = xi,
+                  y = line,
+                  mode = 'lines',
+                  name = 'Fit'
                 )
 
                 trace.append(trace2)
 
+            if self.regressionEqCheck.isChecked():
+                text = 'R2: ' + str(r_value**2) + '  Y = ' + str(slope) + 'x ' + str(intercept)
+                annotation.append(go.Annotation(
+                x = min(x),
+                y = max(y),
+                text = text,
+                showarrow = False
+                ))
 
+
+        # default range slider, empty and not visible
+        rangeslider = dict(visible = False)
+
+        # rangeslider option checkbox
+        if self.rangeCheck.isChecked():
+            rangeslider = dict(visible = True, borderwidth = 1)
 
         # build the data object with all the traces added
         data = trace
@@ -288,9 +305,9 @@ class ScatterPlotDialog(QtGui.QDialog, FORM_CLASS):
         layout = go.Layout(
         showlegend = legend,
         title = plotTitle,
-        xaxis=dict(type = xAx),
+        xaxis=dict(type = xAx, rangeslider = rangeslider),
         yaxis=dict(type = yAx),
-
+        annotations = annotation
         )
 
         # build the final figure
