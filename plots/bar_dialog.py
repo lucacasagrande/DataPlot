@@ -171,7 +171,6 @@ class BarPlotDialog(QtGui.QDialog, FORM_CLASS):
             del self.superdict[row.row()]
 
 
-
     def Bar(self):
 
         # Layout settings, these are the same for all the plots
@@ -189,6 +188,14 @@ class BarPlotDialog(QtGui.QDialog, FORM_CLASS):
         bar = self.barCombo.currentText()
 
         orientation = self.orientationCombo.currentText()
+
+        if orientation == 'vertical':
+            orientation = 'v'
+        else:
+            orientation = 'h'
+
+        print 'orientatio'
+        print orientation
 
 
         # initialize the scatter plot with the first trace
