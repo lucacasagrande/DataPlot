@@ -240,6 +240,26 @@
      </item>
      <item row="0" column="0">
       <layout class="QGridLayout" name="gridLayout_4">
+       <item row="1" column="0">
+        <widget class="QCheckBox" name="titleCheck">
+         <property name="text">
+          <string>Plot Title</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="2">
+        <widget class="QCheckBox" name="xAxisCheck">
+         <property name="text">
+          <string>X Axis Label</string>
+         </property>
+        </widget>
+       </item>
        <item row="1" column="1">
         <widget class="QLineEdit" name="pltTitle">
          <property name="enabled">
@@ -263,15 +283,23 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="0">
-        <widget class="QCheckBox" name="titleCheck">
+       <item row="1" column="2">
+        <widget class="QCheckBox" name="yAxisCheck">
          <property name="text">
-          <string>Plot Title</string>
+          <string>Y Axis Label</string>
          </property>
-         <property name="checkable">
-          <bool>true</bool>
+        </widget>
+       </item>
+       <item row="0" column="3">
+        <widget class="QLineEdit" name="xAxisText">
+         <property name="enabled">
+          <bool>false</bool>
          </property>
-         <property name="checked">
+        </widget>
+       </item>
+       <item row="1" column="3">
+        <widget class="QLineEdit" name="yAxisText">
+         <property name="enabled">
           <bool>false</bool>
          </property>
         </widget>
@@ -435,6 +463,38 @@
     <hint type="destinationlabel">
      <x>663</x>
      <y>106</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>xAxisCheck</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>xAxisText</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>342</x>
+     <y>71</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>418</x>
+     <y>70</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>yAxisCheck</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>yAxisText</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>345</x>
+     <y>98</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>434</x>
+     <y>100</y>
     </hint>
    </hints>
   </connection>

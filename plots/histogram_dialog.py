@@ -28,10 +28,10 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from qgis.gui import *
 from qgis.core import QgsExpression, QgsVectorLayer
-import matplotlib.colors as colors
 import plotly
 import plotly.graph_objs as go
 import tempfile
+from utils import hex_to_rgb
 
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
@@ -113,12 +113,11 @@ class HistogramPlotDialog(QtGui.QDialog, FORM_CLASS):
 
 
 
-        # get the color button and the hex raw color code of the selected color
-        colbutton = self.colorButton
-        colorhex = colbutton.color().name()
+        # get the hex code from the button
+        colorhex = self.colorButton.color().name()
 
-        # convert the hex color code to rgb code
-        colorrgb = colors.hex2color(colorhex)
+        # convert the hex code to a rgb tuple
+        colorrgb = hex_to_rgb(colorhex)
 
 
         # value of the slider for the alpha channel
@@ -196,11 +195,18 @@ class HistogramPlotDialog(QtGui.QDialog, FORM_CLASS):
         # build the data object
         data = trace
 
+        # Axis Label Options
+        xaxis = dict()
+        yaxis = dict()
+
 
         # build the layout object
         layout = go.Layout(
         showlegend = legend,
-        barmode = hist_overlay
+        barmode = hist_overlay,
+        xaxis = xaxis,
+        yaxis = yaxis,
+        title = plotTitle
         )
 
 

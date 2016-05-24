@@ -204,9 +204,22 @@ class BoxPlotDialog(QtGui.QDialog, FORM_CLASS):
         # build the data object
         data = trace
 
+        # Axis Label Options
+        xaxis = dict()
+        yaxis = dict()
+
+        if self.xAxisCheck.isChecked():
+            xaxis = dict(title = self.xAxisText.text())
+
+        if self.yAxisCheck.isChecked():
+            yaxis = dict(title = self.yAxisText.text())
+
         # build the layout object
         layout = go.Layout(
-        showlegend = legend
+        showlegend = legend,
+        xaxis = xaxis,
+        yaxis = yaxis,
+        title = plotTitle
         )
 
         # build the final figure

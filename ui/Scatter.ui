@@ -274,6 +274,13 @@
            </property>
           </widget>
          </item>
+         <item row="1" column="2">
+          <widget class="QCheckBox" name="rangeCheck">
+           <property name="text">
+            <string>Horizontal Slider</string>
+           </property>
+          </widget>
+         </item>
         </layout>
        </item>
        <item row="1" column="0" colspan="2">

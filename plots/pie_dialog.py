@@ -119,6 +119,9 @@ class PiePlotDialog(QtGui.QDialog, FORM_CLASS):
         else:
             legend = False
 
+        # plot title
+        plotTitle = self.pltTitle.text()
+
 
         # initialize the scatter plot with the first trace
         trace = []
@@ -135,7 +138,8 @@ class PiePlotDialog(QtGui.QDialog, FORM_CLASS):
 
         # build the layout object
         layout = go.Layout(
-        showlegend = legend
+        showlegend = legend,
+        title = plotTitle
         )
 
 

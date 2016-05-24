@@ -162,10 +162,13 @@
       <layout class="QGridLayout" name="gridLayout_5">
        <item row="0" column="0">
         <layout class="QGridLayout" name="gridLayout_4">
-         <item row="2" column="0" colspan="2">
-          <widget class="QCheckBox" name="sdCheck">
-           <property name="text">
-            <string>Show standard deviation</string>
+         <item row="1" column="1">
+          <widget class="QLineEdit" name="pltTitle">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="placeholderText">
+            <string>Title</string>
            </property>
           </widget>
          </item>
@@ -182,6 +185,13 @@
            </property>
           </widget>
          </item>
+         <item row="2" column="0" colspan="2">
+          <widget class="QCheckBox" name="sdCheck">
+           <property name="text">
+            <string>Show standard deviation</string>
+           </property>
+          </widget>
+         </item>
          <item row="1" column="0">
           <widget class="QCheckBox" name="titleCheck">
            <property name="text">
@@ -195,13 +205,31 @@
            </property>
           </widget>
          </item>
-         <item row="1" column="1">
-          <widget class="QLineEdit" name="pltTitle">
+         <item row="1" column="2">
+          <widget class="QCheckBox" name="yAxisCheck">
+           <property name="text">
+            <string>Y Axis Label</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QCheckBox" name="xAxisCheck">
+           <property name="text">
+            <string>X Axis Label</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="3">
+          <widget class="QLineEdit" name="xAxisText">
            <property name="enabled">
             <bool>false</bool>
            </property>
-           <property name="placeholderText">
-            <string>Title</string>
+          </widget>
+         </item>
+         <item row="1" column="3">
+          <widget class="QLineEdit" name="yAxisText">
+           <property name="enabled">
+            <bool>false</bool>
            </property>
           </widget>
          </item>
@@ -345,7 +373,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>742</x>
-     <y>415</y>
+     <y>477</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>
@@ -376,12 +404,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>588</x>
-     <y>132</y>
+     <x>678</x>
+     <y>116</y>
     </hint>
     <hint type="destinationlabel">
-     <x>688</x>
-     <y>130</y>
+     <x>730</x>
+     <y>121</y>
     </hint>
    </hints>
   </connection>
@@ -392,12 +420,44 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>704</x>
-     <y>123</y>
+     <x>730</x>
+     <y>121</y>
     </hint>
     <hint type="destinationlabel">
-     <x>636</x>
-     <y>123</y>
+     <x>678</x>
+     <y>116</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>xAxisCheck</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>xAxisText</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>342</x>
+     <y>77</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>429</x>
+     <y>77</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>yAxisCheck</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>yAxisText</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>349</x>
+     <y>107</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>433</x>
+     <y>105</y>
     </hint>
    </hints>
   </connection>
