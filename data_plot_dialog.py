@@ -53,10 +53,11 @@ class DataPlotDialog(QtGui.QDialog, FORM_CLASS):
         self.histogramplotButton.clicked.connect(self.HistogramPlot)
         self.pieplotButton.clicked.connect(self.PiePlot)
         self.scatter3DButton.clicked.connect(self.Scatter3DPlot)
+        self.distplotButton.clicked.connect(self.DistPlot)
 
     # Each function is linked to the button and it imports and allows to run the code of that plot type
 
-    # Open simple scatter plot dialog
+    # Open scatter plot dialog
     def ScatterPlot(self):
         import plots.scatter_dialog as Scatter
         dlg = Scatter.ScatterPlotDialog()
@@ -106,10 +107,19 @@ class DataPlotDialog(QtGui.QDialog, FORM_CLASS):
         dlg.exec_()
 
 
-    # Open pie plot dialog
+    # Open scatter 3D plot dialog
     def Scatter3DPlot(self):
         import plots.scatter3D_dialog as Scatter3D
         dlg = Scatter3D.Scatter3DPlotDialog()
+        # show the dialog
+        dlg.show()
+        # Run the dialog event loop
+        dlg.exec_()
+
+    # Open distplot dialog
+    def DistPlot(self):
+        import plots.distplot_dialog as Dist
+        dlg = Dist.DistPlotDialog()
         # show the dialog
         dlg.show()
         # Run the dialog event loop

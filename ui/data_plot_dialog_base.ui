@@ -161,6 +161,30 @@
     </iconset>
    </property>
   </widget>
+  <widget class="QPushButton" name="distplotButton">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>290</y>
+     <width>151</width>
+     <height>121</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>BarPlot</string>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normalon>:/plugins/DataPlot/icons/bar.png</normalon>
+    </iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>128</width>
+     <height>128</height>
+    </size>
+   </property>
+  </widget>
  </widget>
  <resources>
   <include location="../resources.qrc"/>
