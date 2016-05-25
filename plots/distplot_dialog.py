@@ -174,6 +174,12 @@ class DistPlotDialog(QtGui.QDialog, FORM_CLASS):
             QMessageBox.warning(self, self.tr('Warning!'), self.tr('''You don't have defined any Plot! \nPlease add a plot with the Add Trace button!'''))
             return
 
+
+        # check if at least one of the checkbox is checked
+        if not self.rugCheck.isChecked() and not self.histCheck.isChecked() and not self.curveCheck.isChecked():
+            QMessageBox.warning(self, self.tr('Warning!'), self.tr('''Be sure at least one of Curve, Rug or Histogram checkbox is checked!'''))
+            return
+
         # Layout settings, these are the same for all the plots
 
 
