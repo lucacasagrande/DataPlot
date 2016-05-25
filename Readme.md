@@ -1,14 +1,11 @@
-Quick D3 plots in QGIS
-======================
+D3 plots in QGIS
+================
+This plugin allows you to create [D3 plot](https://d3js.org/) style in QGIS thanks to the [plotly library](https://plot.ly/).
 
-This plugin allow to plot vector attributes data in D3 like plots
+
 
 Installation
 ------------
-The whole plugin uses ``plotly python API``, see https://plot.ly/python/
+You have to install the `plotly` library with `python-pip`.
 
-Install the ``plotly`` library with ``pip``:
-
-```
-pip install plotly
-```
+Please see the [Installation](https://github.com/ghtmtt/DataPlot/wiki/Installation) guide for both [Windows](https://github.com/ghtmtt/DataPlot/wiki/Installation#windows) and [Linux](https://github.com/ghtmtt/DataPlot/wiki/Installation#linux).
