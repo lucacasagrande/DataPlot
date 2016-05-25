@@ -54,6 +54,7 @@ class DataPlotDialog(QtGui.QDialog, FORM_CLASS):
         self.pieplotButton.clicked.connect(self.PiePlot)
         self.scatter3DButton.clicked.connect(self.Scatter3DPlot)
         self.distplotButton.clicked.connect(self.DistPlot)
+        self.polarButton.clicked.connect(self.PolarPlot)
 
     # Each function is linked to the button and it imports and allows to run the code of that plot type
 
@@ -120,6 +121,15 @@ class DataPlotDialog(QtGui.QDialog, FORM_CLASS):
     def DistPlot(self):
         import plots.distplot_dialog as Dist
         dlg = Dist.DistPlotDialog()
+        # show the dialog
+        dlg.show()
+        # Run the dialog event loop
+        dlg.exec_()
+
+    # Open polar plot dialog
+    def PolarPlot(self):
+        import plots.polar_plot_dialog as Polar
+        dlg = Polar.PolarPlotDialog()
         # show the dialog
         dlg.show()
         # Run the dialog event loop
