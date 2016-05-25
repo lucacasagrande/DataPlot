@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>583</width>
-    <height>506</height>
+    <width>527</width>
+    <height>251</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,10 +16,10 @@
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>230</x>
-     <y>460</y>
-     <width>341</width>
-     <height>32</height>
+     <x>320</x>
+     <y>200</y>
+     <width>176</width>
+     <height>31</height>
     </rect>
    </property>
    <property name="orientation">
@@ -32,37 +32,54 @@
   <widget class="QPushButton" name="scatterButton">
    <property name="geometry">
     <rect>
-     <x>30</x>
+     <x>10</x>
      <y>20</y>
-     <width>151</width>
-     <height>121</height>
+     <width>98</width>
+     <height>31</height>
     </rect>
    </property>
-   <property name="text">
-    <string>ScatterPLot</string>
+   <property name="font">
+    <font>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
    </property>
-   <property name="icon">
-    <iconset>
-     <normalon>:/plugins/DataPlot/icons/scatter.png</normalon>
-    </iconset>
+   <property name="mouseTracking">
+    <bool>false</bool>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">text-align: top;</string>
+   </property>
+   <property name="text">
+    <string>Scatter Plot</string>
+   </property>
+   <property name="default">
+    <bool>false</bool>
+   </property>
+   <property name="flat">
+    <bool>false</bool>
    </property>
   </widget>
   <widget class="QPushButton" name="boxplotButton">
    <property name="geometry">
     <rect>
-     <x>200</x>
+     <x>140</x>
      <y>20</y>
-     <width>161</width>
-     <height>121</height>
+     <width>85</width>
+     <height>31</height>
     </rect>
    </property>
-   <property name="text">
-    <string>BoxPlot</string>
+   <property name="font">
+    <font>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
    </property>
-   <property name="icon">
-    <iconset>
-     <normalon>:/plugins/DataPlot/icons/boxplot.png</normalon>
-    </iconset>
+   <property name="styleSheet">
+    <string notr="true">text-align: top</string>
+   </property>
+   <property name="text">
+    <string>Box Plot</string>
    </property>
    <property name="iconSize">
     <size>
@@ -74,43 +91,58 @@
   <widget class="QPushButton" name="barplotButton">
    <property name="geometry">
     <rect>
-     <x>30</x>
-     <y>150</y>
-     <width>151</width>
-     <height>121</height>
+     <x>10</x>
+     <y>70</y>
+     <width>91</width>
+     <height>31</height>
     </rect>
    </property>
-   <property name="text">
-    <string>BarPlot</string>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
    </property>
-   <property name="icon">
-    <iconset>
-     <normalon>:/plugins/DataPlot/icons/bar.png</normalon>
-    </iconset>
+   <property name="font">
+    <font>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">text-align: top;</string>
+   </property>
+   <property name="text">
+    <string>Bar Plot</string>
    </property>
    <property name="iconSize">
     <size>
-     <width>128</width>
-     <height>128</height>
+     <width>80</width>
+     <height>100</height>
     </size>
    </property>
   </widget>
   <widget class="QPushButton" name="histogramplotButton">
    <property name="geometry">
     <rect>
-     <x>380</x>
-     <y>20</y>
-     <width>161</width>
-     <height>121</height>
+     <x>240</x>
+     <y>10</y>
+     <width>87</width>
+     <height>31</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <weight>75</weight>
+     <bold>true</bold>
+     <strikeout>false</strikeout>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">text-align: top</string>
    </property>
    <property name="text">
     <string>Histogram</string>
-   </property>
-   <property name="icon">
-    <iconset>
-     <normalon>:/plugins/DataPlot/icons/histogram.png</normalon>
-    </iconset>
    </property>
    <property name="iconSize">
     <size>
@@ -122,19 +154,23 @@
   <widget class="QPushButton" name="pieplotButton">
    <property name="geometry">
     <rect>
-     <x>200</x>
-     <y>150</y>
-     <width>151</width>
-     <height>121</height>
+     <x>130</x>
+     <y>70</y>
+     <width>121</width>
+     <height>31</height>
     </rect>
    </property>
-   <property name="text">
-    <string>Pie</string>
+   <property name="font">
+    <font>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
    </property>
-   <property name="icon">
-    <iconset>
-     <normalon>:/plugins/DataPlot/icons/pie.png</normalon>
-    </iconset>
+   <property name="styleSheet">
+    <string notr="true">text-align: top</string>
+   </property>
+   <property name="text">
+    <string>Pie Chart</string>
    </property>
    <property name="iconSize">
     <size>
@@ -146,37 +182,45 @@
   <widget class="QPushButton" name="scatter3DButton">
    <property name="geometry">
     <rect>
-     <x>380</x>
-     <y>150</y>
-     <width>161</width>
-     <height>121</height>
+     <x>270</x>
+     <y>60</y>
+     <width>123</width>
+     <height>31</height>
     </rect>
    </property>
-   <property name="text">
-    <string>ScatterPLot3D</string>
+   <property name="font">
+    <font>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
    </property>
-   <property name="icon">
-    <iconset>
-     <normalon>:/plugins/DataPlot/icons/scatter.png</normalon>
-    </iconset>
+   <property name="styleSheet">
+    <string notr="true">text-align: top</string>
+   </property>
+   <property name="text">
+    <string>3D Scatter Plot</string>
    </property>
   </widget>
   <widget class="QPushButton" name="distplotButton">
    <property name="geometry">
     <rect>
-     <x>30</x>
-     <y>290</y>
-     <width>151</width>
-     <height>121</height>
+     <x>10</x>
+     <y>120</y>
+     <width>123</width>
+     <height>31</height>
     </rect>
    </property>
-   <property name="text">
-    <string>BarPlot</string>
+   <property name="font">
+    <font>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
    </property>
-   <property name="icon">
-    <iconset>
-     <normalon>:/plugins/DataPlot/icons/bar.png</normalon>
-    </iconset>
+   <property name="styleSheet">
+    <string notr="true">text-align: top</string>
+   </property>
+   <property name="text">
+    <string>Distibution Plot</string>
    </property>
    <property name="iconSize">
     <size>
