@@ -202,7 +202,7 @@ class BarPlotDialog(QtGui.QDialog, FORM_CLASS):
 
         orientation = self.orientationCombo.currentText()
 
-        if orientation == 'vertical':
+        if orientation == 'Vertical':
             orientation = 'v'
         else:
             orientation = 'h'

@@ -151,6 +151,16 @@ class ScatterPlotDialog(QtGui.QDialog, FORM_CLASS):
         # convert the hex code to a rgb tuple
         colorrgb = hex_to_rgb(colorhex)
 
+        # color for the outline line
+        colorhex2 = self.colorButton2.color().name()
+
+        # convert the hex code to a rgb tuple
+        colorrgb2 = hex_to_rgb(colorhex2)
+
+
+        # value of the slider for the alpha channel
+        alphavalue = self.alpha.value()
+
 
         # value of the slider for the alpha channel
         alphavalue = self.alpha.value()
@@ -185,6 +195,8 @@ class ScatterPlotDialog(QtGui.QDialog, FORM_CLASS):
         self.plot_param["Size"]= markSize
         self.plot_param["Marker"] = symbol
         self.plot_param["Color"] = colorrgb
+        self.plot_param["OutLine_Color"] = colorrgb2
+        self.plot_param["OutLine_Width"] = self.widthBox.value()
         self.plot_param["Transparency"] = alphavalue
         self.plot_param["Name"] = self.expField2.currentText()
 
@@ -254,6 +266,8 @@ class ScatterPlotDialog(QtGui.QDialog, FORM_CLASS):
             color = self.superdict[key].get('Color')
             transparency = self.superdict[key].get('Transparency')
             name = self.superdict[key].get('Name')
+            color_line = self.superdict[key].get("OutLine_Color")
+            width = self.superdict[key].get("OutLine_Width")
 
 
             trace.append(go.Scatter(
@@ -261,7 +275,11 @@ class ScatterPlotDialog(QtGui.QDialog, FORM_CLASS):
             y = y,
             mode = mark,
             name = name,
-            marker = dict(color = 'rgb' + str(color), size = size),
+            marker = dict(
+            color = 'rgb' + str(color),
+            size = size,
+            line = dict(
+            color = 'rgb' + str(color_line), width = width)),
             opacity = (100 - transparency) / 100.0
             ))
 

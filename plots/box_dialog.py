@@ -121,6 +121,12 @@ class BoxPlotDialog(QtGui.QDialog, FORM_CLASS):
         # convert the hex code to a rgb tuple
         colorrgb = hex_to_rgb(colorhex)
 
+        # color for the outline line
+        colorhex2 = self.colorButton2.color().name()
+
+        # convert the hex code to a rgb tuple
+        colorrgb2 = hex_to_rgb(colorhex2)
+
 
         # value of the slider for the alpha channel
         alphavalue = self.alpha.value()
@@ -133,6 +139,8 @@ class BoxPlotDialog(QtGui.QDialog, FORM_CLASS):
         self.plot_param["layer"] = (self.LayerCombo.currentLayer())
         self.plot_param["Field"]= f1
         self.plot_param["Color"] = colorrgb
+        self.plot_param["OutLine_Color"] = colorrgb2
+        self.plot_param["OutLine_Width"] = self.widthBox.value()
         self.plot_param["Transparency"] = alphavalue
         self.plot_param["Name"] = self.expField1.currentText()
         self.plot_param["Outlier"] = self.outlierCombo.currentText()
@@ -158,7 +166,7 @@ class BoxPlotDialog(QtGui.QDialog, FORM_CLASS):
 
 
     def Box(self):
-        
+
         # Check if the table is empty, that is if any plot has been defined
         if self.traceTable.rowCount() == 0:
             QMessageBox.warning(self, self.tr('Warning!'), self.tr('''You don't have defined any Plot! \nPlease add a plot with the Add Trace button!'''))
@@ -172,11 +180,16 @@ class BoxPlotDialog(QtGui.QDialog, FORM_CLASS):
         else:
             legend = False
 
+
         # standard deviation checkbox (default is checked = False)
-        if self.sdCheck.isChecked():
-            sd = True
+        stat = self.statCombo.currentText()
+
+        if stat == 'Mean':
+            stat = True
+        elif stat =='Standard Deviation':
+            stat = 'sd'
         else:
-            sd = False
+            stat = False
 
 
         # plot title
@@ -193,15 +206,20 @@ class BoxPlotDialog(QtGui.QDialog, FORM_CLASS):
             transparency = self.superdict[key].get('Transparency')
             outlier = self.superdict[key].get('Outlier')
             name = self.superdict[key].get('Name')
+            color_line = self.superdict[key].get("OutLine_Color")
+            width = self.superdict[key].get("OutLine_Width")
 
 
             trace.append(go.Box(
             y = y,
-            marker = dict(color = 'rgb' + str(color)),
+            marker = dict(
+            fillcolor = 'rgb' + str(color),
+            line = dict(
+            color = 'rgb' + str(color_line), width = width)),
             boxpoints = outlier,
             name = name,
             opacity = (100 - transparency) / 100.0,
-            boxmean = sd
+            boxmean = stat
             ))
 
 

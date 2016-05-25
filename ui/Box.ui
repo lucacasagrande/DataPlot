@@ -29,10 +29,40 @@
       <layout class="QGridLayout" name="gridLayout_2">
        <item row="0" column="0">
         <layout class="QGridLayout" name="gridLayout">
+         <item row="2" column="2">
+          <widget class="QLabel" name="label_6">
+           <property name="text">
+            <string>Transparency</string>
+           </property>
+          </widget>
+         </item>
          <item row="0" column="2">
           <widget class="QLabel" name="label_5">
            <property name="text">
             <string>Box color</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="3">
+          <widget class="QgsColorButtonV2" name="colorButton2"/>
+         </item>
+         <item row="0" column="3">
+          <widget class="QgsColorButtonV2" name="colorButton"/>
+         </item>
+         <item row="0" column="1">
+          <widget class="QgsMapLayerComboBox" name="LayerCombo"/>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="label_3">
+           <property name="text">
+            <string>Outlier Styling</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="2">
+          <widget class="QLabel" name="label_8">
+           <property name="text">
+            <string>Outline color</string>
            </property>
           </widget>
          </item>
@@ -43,6 +73,13 @@
            </property>
           </widget>
          </item>
+         <item row="1" column="4">
+          <widget class="QLabel" name="label_9">
+           <property name="text">
+            <string>Outline Width</string>
+           </property>
+          </widget>
+         </item>
          <item row="1" column="0">
           <widget class="QLabel" name="label_2">
            <property name="text">
@@ -50,8 +87,29 @@
            </property>
           </widget>
          </item>
-         <item row="0" column="1">
-          <widget class="QgsMapLayerComboBox" name="LayerCombo"/>
+         <item row="2" column="1">
+          <widget class="QComboBox" name="outlierCombo">
+           <item>
+            <property name="text">
+             <string>False</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>all</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>suspectedoutliers</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Outliers</string>
+            </property>
+           </item>
+          </widget>
          </item>
          <item row="1" column="1">
           <widget class="QgsFieldExpressionWidget" name="expField1">
@@ -63,17 +121,27 @@
            </property>
           </widget>
          </item>
-         <item row="0" column="3">
-          <widget class="QgsColorButtonV2" name="colorButton"/>
-         </item>
-         <item row="1" column="2">
-          <widget class="QLabel" name="label_6">
-           <property name="text">
-            <string>Transparency</string>
+         <item row="1" column="5">
+          <widget class="QDoubleSpinBox" name="widthBox">
+           <property name="decimals">
+            <number>1</number>
+           </property>
+           <property name="value">
+            <double>1.000000000000000</double>
            </property>
           </widget>
          </item>
-         <item row="1" column="3">
+         <item row="2" column="5">
+          <widget class="QSpinBox" name="alphaBox">
+           <property name="buttonSymbols">
+            <enum>QAbstractSpinBox::NoButtons</enum>
+           </property>
+           <property name="maximum">
+            <number>100</number>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="3" colspan="2">
           <widget class="QSlider" name="alpha">
            <property name="cursor">
             <cursorShape>ArrowCursor</cursorShape>
@@ -110,47 +178,6 @@
            </property>
           </widget>
          </item>
-         <item row="1" column="4">
-          <widget class="QSpinBox" name="alphaBox">
-           <property name="buttonSymbols">
-            <enum>QAbstractSpinBox::NoButtons</enum>
-           </property>
-           <property name="maximum">
-            <number>100</number>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="2">
-          <widget class="QLabel" name="label_3">
-           <property name="text">
-            <string>Outlier Styling</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="3">
-          <widget class="QComboBox" name="outlierCombo">
-           <item>
-            <property name="text">
-             <string>False</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>all</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>suspectedoutliers</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Outliers</string>
-            </property>
-           </item>
-          </widget>
-         </item>
         </layout>
        </item>
       </layout>
@@ -182,13 +209,6 @@
            </property>
            <property name="checked">
             <bool>false</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0" colspan="2">
-          <widget class="QCheckBox" name="sdCheck">
-           <property name="text">
-            <string>Show standard deviation</string>
            </property>
           </widget>
          </item>
@@ -230,6 +250,32 @@
           <widget class="QLineEdit" name="yAxisText">
            <property name="enabled">
             <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QComboBox" name="statCombo">
+           <item>
+            <property name="text">
+             <string notr="true">Mean</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string notr="true">Standard Deviation</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>None</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="label_7">
+           <property name="text">
+            <string>Show Statistics</string>
            </property>
           </widget>
          </item>

@@ -324,12 +324,12 @@
           <widget class="QComboBox" name="orientationCombo">
            <item>
             <property name="text">
-             <string>vertical</string>
+             <string>Vertical</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>horizontal</string>
+             <string>Horizontal</string>
             </property>
            </item>
           </widget>

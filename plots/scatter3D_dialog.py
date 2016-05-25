@@ -159,6 +159,12 @@ class Scatter3DPlotDialog(QtGui.QDialog, FORM_CLASS):
         # convert the hex code to a rgb tuple
         colorrgb = hex_to_rgb(colorhex)
 
+        # color for the outline line
+        colorhex2 = self.colorButton2.color().name()
+
+        # convert the hex code to a rgb tuple
+        colorrgb2 = hex_to_rgb(colorhex2)
+
 
         # value of the slider for the alpha channel
         alphavalue = self.alpha.value()
@@ -189,6 +195,8 @@ class Scatter3DPlotDialog(QtGui.QDialog, FORM_CLASS):
         self.plot_param["Z"] = f3
         self.plot_param["Size"]= markSize
         self.plot_param["Color"] = colorrgb
+        self.plot_param["OutLine_Color"] = colorrgb2
+        self.plot_param["OutLine_Width"] = self.widthBox.value()
         self.plot_param["Transparency"] = alphavalue
         self.plot_param["Name"] = self.expField2.currentText()
 
@@ -218,7 +226,7 @@ class Scatter3DPlotDialog(QtGui.QDialog, FORM_CLASS):
         if self.traceTable.rowCount() == 0:
             QMessageBox.warning(self, self.tr('Warning!'), self.tr('''You don't have defined any Plot! \nPlease add a plot with the Add Trace button!'''))
             return
-            
+
         # Layout settings, these are the same for all the plots
 
 
@@ -244,6 +252,8 @@ class Scatter3DPlotDialog(QtGui.QDialog, FORM_CLASS):
             color = self.superdict[key].get('Color')
             transparency = self.superdict[key].get('Transparency')
             name = self.superdict[key].get('Name')
+            color_line = self.superdict[key].get("OutLine_Color")
+            width = self.superdict[key].get("OutLine_Width")
 
 
             # initialize the Bar plot with the first trace
@@ -253,10 +263,13 @@ class Scatter3DPlotDialog(QtGui.QDialog, FORM_CLASS):
             z = z,
             mode = 'markers',
             name = name,
-            marker = dict(color = 'rgb' + str(color),
+            marker = dict(
+            color = 'rgb' + str(color),
             size = size,
+            line = dict(
+            color = 'rgb' + str(color_line), width = width)),
             opacity = (100 - transparency) / 100.0
-            )))
+            ))
 
         # build the data object with all the traces added
         data = trace
