@@ -162,9 +162,6 @@ class ScatterPlotDialog(QtGui.QDialog, FORM_CLASS):
         alphavalue = self.alpha.value()
 
 
-        # value of the slider for the alpha channel
-        alphavalue = self.alpha.value()
-
         # size settings
         if self.dataDefined.isActive() == False:
             markSize = self.Size.value()
