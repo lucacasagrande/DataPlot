@@ -29,6 +29,8 @@ import os.path
 
 from qgis.gui import QgsMapLayerProxyModel
 
+from DataPlot.plots.base_plot import BasePlot
+
 
 class DataPlot:
     """QGIS Plugin Implementation."""
@@ -61,6 +63,20 @@ class DataPlot:
 
         # Create the dialog (after translation) and keep reference
         self.dlg = DataPlotDialog()
+
+        # Add data to plotTypeCombo
+        self.plotTypes = {
+            'pie': self.tr('Pie chart'),
+            'box': self.tr('Box plot'),
+            'histogram': self.tr('Histogram'),
+            'bar': self.tr('Bar Chart'),
+            'distribution': self.tr('Distribution plot'),
+            'scatter': self.tr('Scatter plot'),
+            'scatter3d': self.tr('Scatter plot 3D')
+        }
+        for k,v in self.plotTypes.items():
+            self.dlg.plotTypeCombo.addItem( v, k)
+
 
         # Declare instance attributes
         self.actions = []
@@ -175,9 +191,44 @@ class DataPlot:
         # filter only vector layers in the QgsMapLayerComboBox
         self.dlg.LayerCombo.setFilters(QgsMapLayerProxyModel.VectorLayer)
 
-        # get the initial index value for future iterations
-        self.index = 1
+        self.dlg.addPlotButton.clicked.connect(self.addPlot)
 
+
+
+    def addPlot(self):
+        '''
+        Adds a new plot configuration
+        '''
+        p = BasePlot()
+
+        # Add layer
+        p.addLayer( self.dlg.expFieldX.layer() )
+
+        # Get type
+        idx = self.dlg.plotTypeCombo.currentIndex()
+        ptype = self.dlg.plotTypeCombo.itemData(idx)
+        p.setType( ptype )
+
+        # Get other properties
+
+        # Set data from fields
+        axis = {
+            'x': self.dlg.expFieldX,
+            'y': self.dlg.expFieldY,
+            'z': self.dlg.expFieldZ
+        }
+        p.plot_data = {}
+        for k,v in axis.items():
+            if not v.currentText():
+                continue
+            if v.currentField()[1]:
+                p.setAxisDataFromLayer(k, fieldName=v.currentText() )
+            else:
+                p.setAxisDataFromLayer(k, expression=v.currentField()[0] )
+
+        p.setMatrix()
+
+        print p.plot_matrix
 
     def unload(self):
         """Removes the plugin menu item and icon from QGIS GUI."""

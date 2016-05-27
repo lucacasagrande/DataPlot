@@ -25,8 +25,11 @@ import os
 
 from qgis.core import QgsMapLayer, QgsVectorLayer, QgsFeature, QgsField, QgsExpression
 from PyQt4.QtCore import QVariant
+import plotly
+import plotly.graph_objs as go
+import tempfile
 
-class basePlot():
+class BasePlot():
 
     plot_layer = None
 
@@ -36,11 +39,13 @@ class basePlot():
 
     plot_properties = {}
 
-    plot_alpha_value = None
+    plot_alpha_value = 50
 
     plot_legend = False
 
     plot_title = u''
+
+    plot_matrix = []
 
     def __init__(
             self
@@ -54,10 +59,10 @@ class basePlot():
         '''
         Add layer data source
         '''
-        self.plot_layer = plot_layer
+        self.plot_layer = layer
 
 
-    def setProperties(self, properties={}, kwargs**):
+    def setProperties(self, properties={}, **kwargs):
         '''
         Set all the plot properties
         '''
@@ -99,19 +104,41 @@ class basePlot():
         return True
 
 
-    def setDataFromLayer(self, axis, fieldName=None, expression=None):
+    def setAxisDataFromLayer(self, axis, **kwargs):
         '''
         Get data in plot.ly format from layer
         '''
-        if expression:
-            exp = QgsExpression(expression)
-            if exp.isValid():
-                data = [ exp.evaluate(feat, lay1.pendingFields() ) for feat in layer.getFeatures() ]
+        layer = self.plot_layer
+        data = None
+
+        if 'expression' in kwargs:
+            exp = QgsExpression(kwargs['expression'])
+            if not exp.hasParserError():
+                exp.prepare(layer.pendingFields())
+                data = [ exp.evaluate(feat) for feat in layer.getFeatures() ]
             else:
                 return False
 
-        if fieldName:
-            data = [feat[fieldName] for feat in layer.getFeatures() ]
+        if 'fieldName' in kwargs:
+            data = [feat[kwargs['fieldName']] for feat in layer.getFeatures() ]
 
         self.plot_data[axis] = data
 
+
+    def setMatrix(self):
+        '''
+        Set the matrix of X, Y and optional Z
+        '''
+        axis = ['x', 'y', 'z']
+        self.plot_matrix = []
+        for a in axis:
+            if a in self.plot_data:
+                self.plot_matrix.append(self.plot_data[a])
+
+
+
+    def builPlot(self):
+        '''
+        Build the instance of the plot
+        '''
+        print u'build plot'

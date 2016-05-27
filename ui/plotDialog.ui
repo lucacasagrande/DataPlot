@@ -25,7 +25,7 @@
         <x>0</x>
         <y>0</y>
         <width>921</width>
-        <height>495</height>
+        <height>499</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout">
@@ -83,43 +83,7 @@
          <widget class="QWidget" name="page">
           <layout class="QVBoxLayout" name="verticalLayout_2">
            <item>
-            <widget class="QComboBox" name="plotCombo">
-             <item>
-              <property name="text">
-               <string>Scatter Plot</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Pie Chart</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Box Plot</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Histogram</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Distribution Plot</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Bar Plot</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Scatter 3D</string>
-              </property>
-             </item>
-            </widget>
+            <widget class="QComboBox" name="plotTypeCombo"/>
            </item>
            <item>
             <widget class="QTabWidget" name="tabWidget">
@@ -681,7 +645,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="createeButton">
+            <widget class="QPushButton" name="addPlotButton">
              <property name="font">
               <font>
                <weight>75</weight>
@@ -689,14 +653,14 @@
               </font>
              </property>
              <property name="text">
-              <string>Create Plot</string>
+              <string>Add plot to basket</string>
              </property>
             </widget>
            </item>
           </layout>
           <zorder>tabWidget</zorder>
-          <zorder>plotCombo</zorder>
-          <zorder>createeButton</zorder>
+          <zorder>plotTypeCombo</zorder>
+          <zorder>addPlotButton</zorder>
          </widget>
          <widget class="QWidget" name="page_2"/>
         </widget>
