@@ -38,6 +38,7 @@ class BasePlot():
     plot_type = 'pie'
 
     plot_properties = {}
+    plot_layout = {}
 
     plot_alpha_value = 50
 
@@ -46,6 +47,8 @@ class BasePlot():
     plot_title = u''
 
     plot_matrix = []
+
+    plot_trace = []
 
     def __init__(
             self
@@ -66,7 +69,14 @@ class BasePlot():
         '''
         Set all the plot properties
         '''
-        self.plot_properties[prop] = val
+        self.plot_properties = properties
+
+
+    def setLayout(self, layout={}, **kwargs):
+        '''
+        Set all the plot layout
+        '''
+        self.plot_layout = layout
 
 
     def setType(self, plot_type):
@@ -135,10 +145,38 @@ class BasePlot():
             if a in self.plot_data:
                 self.plot_matrix.append(self.plot_data[a])
 
+        print self.plot_matrix
 
 
-    def builPlot(self):
+    def buildPlot(self):
         '''
         Build the instance of the plot
         '''
-        print u'build plot'
+        print self.plot_type
+        print self.plot_properties
+        print self.plot_layout
+
+        if self.plot_type == 'pie':
+
+            # Add needed properties
+            self.plot_properties['labels'] = self.plot_data['x']
+            self.plot_properties['values'] = self.plot_data['y']
+
+            # Add plot
+            plot = go.Pie(self.plot_properties)
+            self.plot_trace.append(plot)
+
+            # Configure layout
+            layout = go.Layout( self.plot_layout )
+
+        else:
+            return
+
+        # Build a figure
+        fig = go.Figure(
+            data = self.plot_trace,
+            layout = layout
+        )
+
+        # Generate HTML file
+        plotly.offline.plot(fig, filename='test')

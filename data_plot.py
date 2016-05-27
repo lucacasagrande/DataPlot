@@ -65,7 +65,7 @@ class DataPlot:
         self.dlg = DataPlotDialog()
 
         # Add data to plotTypeCombo
-        self.plotTypes = {
+        self.plot_types = {
             'pie': self.tr('Pie chart'),
             'box': self.tr('Box plot'),
             'histogram': self.tr('Histogram'),
@@ -74,9 +74,11 @@ class DataPlot:
             'scatter': self.tr('Scatter plot'),
             'scatter3d': self.tr('Scatter plot 3D')
         }
-        for k,v in self.plotTypes.items():
+        for k,v in self.plot_types.items():
             self.dlg.plotTypeCombo.addItem( v, k)
 
+        self.plot_properties = {}
+        self.layout_properties = {}
 
         # Declare instance attributes
         self.actions = []
@@ -228,7 +230,21 @@ class DataPlot:
 
         p.setMatrix()
 
-        print p.plot_matrix
+        # Set properties
+        plot_properties = {
+            'opacity': (100 - self.dlg.alpha.value()) / 100.0
+        }
+        p.setProperties( plot_properties )
+
+        # Set layout properties
+        plot_layout = {
+            'showlegend': self.dlg.legendCheck.isChecked() ,
+            'title': self.dlg.plotTitle.text(),
+        }
+        p.setLayout( plot_layout )
+
+        p.buildPlot()
+
 
     def unload(self):
         """Removes the plugin menu item and icon from QGIS GUI."""
