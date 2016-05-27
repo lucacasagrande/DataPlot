@@ -27,6 +27,8 @@ from PyQt4.QtGui import QAction, QIcon
 from data_plot_dialog import DataPlotDialog
 import os.path
 
+from qgis.gui import QgsMapLayerProxyModel
+
 
 class DataPlot:
     """QGIS Plugin Implementation."""
@@ -58,7 +60,7 @@ class DataPlot:
                 QCoreApplication.installTranslator(self.translator)
 
         # Create the dialog (after translation) and keep reference
-        # self.dlg = DataPlotDialog()
+        self.dlg = DataPlotDialog()
 
         # Declare instance attributes
         self.actions = []
@@ -169,11 +171,12 @@ class DataPlot:
             callback=self.run,
             parent=self.iface.mainWindow())
 
-        # self.add_action(
-        # icon_path=None,
-        # text=self.tr('Scatter'),
-        # callback=self.runScatter,
-        # parent=self.iface.mainWindow())
+        # Connect signals/slots
+        # filter only vector layers in the QgsMapLayerComboBox
+        self.dlg.LayerCombo.setFilters(QgsMapLayerProxyModel.VectorLayer)
+
+        # get the initial index value for future iterations
+        self.index = 1
 
 
     def unload(self):
@@ -189,8 +192,7 @@ class DataPlot:
 
     def run(self):
         """Run method that performs all the real work"""
-        # Create the dialog (after translation) and keep reference
-        self.dlg = DataPlotDialog()
+
         # show the dialog
         self.dlg.show()
         # Run the dialog event loop
@@ -200,17 +202,3 @@ class DataPlot:
             # Do something useful here - delete the line containing pass and
             # substitute with your code.
             pass
-
-    # def runScatter(self):
-    #     """Run method that performs all the real work"""
-    #     # Create the dialog (after translation) and keep reference
-    #     self.dlg = ScatterPlotDialog()
-    #     # show the dialog
-    #     self.dlg.show()
-    #     # Run the dialog event loop
-    #     result = self.dlg.exec_()
-    #     # See if OK was pressed
-    #     if result:
-    #         # Do something useful here - delete the line containing pass and
-    #         # substitute with your code.
-    #         pass

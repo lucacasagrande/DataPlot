@@ -27,14 +27,11 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from PyQt4.QtWebKit import QWebView
 from qgis.gui import *
-import plotly
-from plotly.graph_objs import Scatter, Box, Layout
-
 
 
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
-    os.path.dirname(__file__), 'ui/data_plot_dialog_base.ui'))
+    os.path.dirname(__file__), 'ui/plotDialog.ui'))
 
 
 class DataPlotDialog(QtGui.QDialog, FORM_CLASS):
@@ -47,90 +44,3 @@ class DataPlotDialog(QtGui.QDialog, FORM_CLASS):
         # http://qt-project.org/doc/qt-4.8/designer-using-a-ui-file.html
         # #widgets-and-dialogs-with-auto-connect
         self.setupUi(self)
-        self.scatterButton.clicked.connect(self.ScatterPlot)
-        self.boxplotButton.clicked.connect(self.BoxPlot)
-        self.barplotButton.clicked.connect(self.BarPlot)
-        self.histogramplotButton.clicked.connect(self.HistogramPlot)
-        self.pieplotButton.clicked.connect(self.PiePlot)
-        self.scatter3DButton.clicked.connect(self.Scatter3DPlot)
-        self.distplotButton.clicked.connect(self.DistPlot)
-        self.polarButton.clicked.connect(self.PolarPlot)
-
-    # Each function is linked to the button and it imports and allows to run the code of that plot type
-
-    # Open scatter plot dialog
-    def ScatterPlot(self):
-        import plots.scatter_dialog as Scatter
-        dlg = Scatter.ScatterPlotDialog()
-        # show the dialog
-        dlg.show()
-        # Run the dialog event loop
-        dlg.exec_()
-
-
-    # Open boxplot dialog
-    def BoxPlot(self):
-        import plots.box_dialog as Box
-        dlg = Box.BoxPlotDialog()
-        # show the dialog
-        dlg.show()
-        # Run the dialog event loop
-        dlg.exec_()
-
-
-    # Open barplot dialog
-    def BarPlot(self):
-        import plots.bar_dialog as Bar
-        dlg = Bar.BarPlotDialog()
-        # show the dialog
-        dlg.show()
-        # Run the dialog event loop
-        dlg.exec_()
-
-
-    # Open histogram dialog
-    def HistogramPlot(self):
-        import plots.histogram_dialog as Histogram
-        dlg = Histogram.HistogramPlotDialog()
-        # show the dialog
-        dlg.show()
-        # Run the dialog event loop
-        dlg.exec_()
-
-
-    # Open pie plot dialog
-    def PiePlot(self):
-        import plots.pie_dialog as Pie
-        dlg = Pie.PiePlotDialog()
-        # show the dialog
-        dlg.show()
-        # Run the dialog event loop
-        dlg.exec_()
-
-
-    # Open scatter 3D plot dialog
-    def Scatter3DPlot(self):
-        import plots.scatter3D_dialog as Scatter3D
-        dlg = Scatter3D.Scatter3DPlotDialog()
-        # show the dialog
-        dlg.show()
-        # Run the dialog event loop
-        dlg.exec_()
-
-    # Open distplot dialog
-    def DistPlot(self):
-        import plots.distplot_dialog as Dist
-        dlg = Dist.DistPlotDialog()
-        # show the dialog
-        dlg.show()
-        # Run the dialog event loop
-        dlg.exec_()
-
-    # Open polar plot dialog
-    def PolarPlot(self):
-        import plots.polar_plot_dialog as Polar
-        dlg = Polar.PolarPlotDialog()
-        # show the dialog
-        dlg.show()
-        # Run the dialog event loop
-        dlg.exec_()
