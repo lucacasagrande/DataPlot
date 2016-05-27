@@ -457,13 +457,6 @@
               <layout class="QVBoxLayout" name="verticalLayout_4">
                <item>
                 <layout class="QGridLayout" name="gridLayout">
-                 <item row="0" column="0" colspan="2">
-                  <widget class="QCheckBox" name="legendCheck">
-                   <property name="text">
-                    <string>CheckBox</string>
-                   </property>
-                  </widget>
-                 </item>
                  <item row="0" column="5" colspan="3">
                   <widget class="QCheckBox" name="regressionCheck">
                    <property name="text">
@@ -471,10 +464,17 @@
                    </property>
                   </widget>
                  </item>
+                 <item row="0" column="0" colspan="2">
+                  <widget class="QCheckBox" name="legendCheck">
+                   <property name="text">
+                    <string>CheckBox</string>
+                   </property>
+                  </widget>
+                 </item>
                  <item row="0" column="8">
                   <widget class="QCheckBox" name="regressionCheck">
                    <property name="enabled">
-                    <bool>false</bool>
+                    <bool>true</bool>
                    </property>
                    <property name="text">
                     <string>Show equation</string>
@@ -525,7 +525,7 @@
                  <item row="3" column="2" colspan="2">
                   <widget class="QLineEdit" name="xAxisText">
                    <property name="enabled">
-                    <bool>false</bool>
+                    <bool>true</bool>
                    </property>
                   </widget>
                  </item>
@@ -539,11 +539,11 @@
                  <item row="3" column="6" colspan="3">
                   <widget class="QLineEdit" name="yAxisText">
                    <property name="enabled">
-                    <bool>false</bool>
+                    <bool>true</bool>
                    </property>
                   </widget>
                  </item>
-                 <item row="4" column="0" colspan="2">
+                 <item row="5" column="0" colspan="2">
                   <widget class="QCheckBox" name="rugCheck">
                    <property name="text">
                     <string>Show Rug</string>
@@ -553,7 +553,7 @@
                    </property>
                   </widget>
                  </item>
-                 <item row="4" column="2" colspan="3">
+                 <item row="5" column="2" colspan="3">
                   <widget class="QCheckBox" name="histCheck">
                    <property name="text">
                     <string>Show Histogram</string>
@@ -563,7 +563,7 @@
                    </property>
                   </widget>
                  </item>
-                 <item row="4" column="5" colspan="2">
+                 <item row="5" column="5" colspan="2">
                   <widget class="QCheckBox" name="curveCheck">
                    <property name="text">
                     <string>Show Curve</string>
@@ -573,14 +573,14 @@
                    </property>
                   </widget>
                  </item>
-                 <item row="5" column="0">
+                 <item row="6" column="0">
                   <widget class="QLabel" name="label_35">
                    <property name="text">
                     <string>Curve Type</string>
                    </property>
                   </widget>
                  </item>
-                 <item row="5" column="2" colspan="2">
+                 <item row="6" column="2" colspan="2">
                   <widget class="QComboBox" name="curveCombo">
                    <item>
                     <property name="text">
@@ -594,14 +594,14 @@
                    </item>
                   </widget>
                  </item>
-                 <item row="5" column="5">
+                 <item row="6" column="5">
                   <widget class="QLabel" name="label_36">
                    <property name="text">
                     <string>Bin Size</string>
                    </property>
                   </widget>
                  </item>
-                 <item row="5" column="7" colspan="2">
+                 <item row="6" column="7" colspan="2">
                   <widget class="QDoubleSpinBox" name="binSize">
                    <property name="minimum">
                     <double>0.100000000000000</double>
@@ -617,14 +617,14 @@
                    </property>
                   </widget>
                  </item>
-                 <item row="6" column="0">
+                 <item row="7" column="0">
                   <widget class="QLabel" name="label_32">
                    <property name="text">
                     <string>Bar Styling</string>
                    </property>
                   </widget>
                  </item>
-                 <item row="6" column="1" colspan="5">
+                 <item row="7" column="1" colspan="5">
                   <widget class="QComboBox" name="histCombo">
                    <property name="styleSheet">
                     <string notr="true"/>
@@ -650,6 +650,16 @@
                     <string>Title</string>
                    </property>
                   </widget>
+                 </item>
+                 <item row="4" column="0">
+                  <widget class="QCheckBox" name="checkBox">
+                   <property name="text">
+                    <string>Z Axis Labell</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="4" column="1">
+                  <widget class="QLineEdit" name="zAxisText"/>
                  </item>
                 </layout>
                </item>
@@ -739,8 +749,8 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
+     <x>257</x>
+     <y>542</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
@@ -755,12 +765,124 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>316</x>
-     <y>260</y>
+     <x>325</x>
+     <y>542</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>
      <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>LayerCombo</sender>
+   <signal>layerChanged(QgsMapLayer*)</signal>
+   <receiver>expFieldX</receiver>
+   <slot>setLayer(QgsMapLayer*)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>360</x>
+     <y>128</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>353</x>
+     <y>150</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>LayerCombo</sender>
+   <signal>layerChanged(QgsMapLayer*)</signal>
+   <receiver>expFieldY</receiver>
+   <slot>setLayer(QgsMapLayer*)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>405</x>
+     <y>118</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>311</x>
+     <y>191</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>LayerCombo</sender>
+   <signal>layerChanged(QgsMapLayer*)</signal>
+   <receiver>expFieldZ</receiver>
+   <slot>setLayer(QgsMapLayer*)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>329</x>
+     <y>130</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>375</x>
+     <y>248</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>alpha</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>alphaBox</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>702</x>
+     <y>273</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>833</x>
+     <y>278</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>alphaBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>alpha</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>855</x>
+     <y>264</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>792</x>
+     <y>264</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>dataDefined</sender>
+   <signal>dataDefinedActivated(bool)</signal>
+   <receiver>Size</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>426</x>
+     <y>278</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>394</x>
+     <y>277</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>Dialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>813</x>
+     <y>529</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>945</x>
+     <y>418</y>
     </hint>
    </hints>
   </connection>
