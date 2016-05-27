@@ -20,8 +20,8 @@
  *                                                                         *
  ***************************************************************************/
 """
-from PyQt4.QtCore import QSettings, QTranslator, qVersion, QCoreApplication
-from PyQt4.QtGui import QAction, QIcon
+from PyQt4.QtCore import QSettings, QTranslator, qVersion, QCoreApplication, QUrl
+from PyQt4.QtGui import QAction, QIcon, QVBoxLayout
 
 # Import the code for the dialog
 from data_plot_dialog import DataPlotDialog
@@ -30,6 +30,9 @@ import os.path
 from qgis.gui import QgsMapLayerProxyModel
 
 from DataPlot.plots.base_plot import BasePlot
+
+from DataPlot.plots.base_plot_webview import plotWebView
+
 
 
 class DataPlot:
@@ -74,11 +77,11 @@ class DataPlot:
             'scatter': self.tr('Scatter plot'),
             'scatter3d': self.tr('Scatter plot 3D')
         }
+        self.dlg.plotTypeCombo.clear()
         for k,v in self.plot_types.items():
             self.dlg.plotTypeCombo.addItem( v, k)
 
-        self.plot_properties = {}
-        self.layout_properties = {}
+
 
         # Declare instance attributes
         self.actions = []
@@ -243,7 +246,17 @@ class DataPlot:
         }
         p.setLayout( plot_layout )
 
-        p.buildPlot()
+        html = p.buildPlot()
+        print html
+        w = plotWebView()
+        w.loadHtml(html)
+        layout = QVBoxLayout()
+        layout.setContentsMargins(0,0,0,0)
+        layout.setSpacing(0)
+        layout.addWidget(w)
+        w.show()
+        self.dlg.webViewPage.setLayout(layout)
+
 
 
     def unload(self):

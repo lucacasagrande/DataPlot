@@ -25,7 +25,6 @@ import os
 from PyQt4 import QtGui, uic
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-from PyQt4.QtWebKit import QWebView
 from qgis.gui import *
 
 

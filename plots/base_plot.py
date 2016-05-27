@@ -28,6 +28,7 @@ from PyQt4.QtCore import QVariant
 import plotly
 import plotly.graph_objs as go
 import tempfile
+from base_plot_webview import plotWebView
 
 class BasePlot():
 
@@ -49,6 +50,8 @@ class BasePlot():
     plot_matrix = []
 
     plot_trace = []
+
+    plot_path = None
 
     def __init__(
             self
@@ -179,4 +182,9 @@ class BasePlot():
         )
 
         # Generate HTML file
-        plotly.offline.plot(fig, filename='test')
+        html = plotly.offline.plot(
+            fig,
+            show_link=False,
+            output_type='div'
+        )
+        return html

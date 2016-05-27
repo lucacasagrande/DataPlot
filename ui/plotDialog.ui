@@ -25,7 +25,7 @@
         <x>0</x>
         <y>0</y>
         <width>921</width>
-        <height>499</height>
+        <height>495</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout">
@@ -40,18 +40,6 @@
          <item>
           <property name="text">
            <string>Add Plot</string>
-          </property>
-          <property name="font">
-           <font>
-            <pointsize>13</pointsize>
-            <weight>75</weight>
-            <bold>true</bold>
-           </font>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Configuration</string>
           </property>
           <property name="font">
            <font>
@@ -83,7 +71,43 @@
          <widget class="QWidget" name="page">
           <layout class="QVBoxLayout" name="verticalLayout_2">
            <item>
-            <widget class="QComboBox" name="plotTypeCombo"/>
+            <widget class="QComboBox" name="plotTypeCombo">
+             <item>
+              <property name="text">
+               <string>Scatter Plot</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Pie Chart</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Box Plot</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Histogram</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Distribution Plot</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Bar Plot</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Scatter 3D</string>
+              </property>
+             </item>
+            </widget>
            </item>
            <item>
             <widget class="QTabWidget" name="tabWidget">
@@ -431,7 +455,7 @@
                  <item row="0" column="0" colspan="2">
                   <widget class="QCheckBox" name="legendCheck">
                    <property name="text">
-                    <string>CheckBox</string>
+                    <string>Show Legend</string>
                    </property>
                   </widget>
                  </item>
@@ -653,7 +677,7 @@
               </font>
              </property>
              <property name="text">
-              <string>Add plot to basket</string>
+              <string>Create Plot</string>
              </property>
             </widget>
            </item>
@@ -662,7 +686,7 @@
           <zorder>plotTypeCombo</zorder>
           <zorder>addPlotButton</zorder>
          </widget>
-         <widget class="QWidget" name="page_2"/>
+         <widget class="QWidget" name="webViewPage"/>
         </widget>
        </item>
       </layout>
@@ -847,6 +871,22 @@
     <hint type="destinationlabel">
      <x>945</x>
      <y>418</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>listWidget</sender>
+   <signal>currentRowChanged(int)</signal>
+   <receiver>stackedWidget</receiver>
+   <slot>setCurrentIndex(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>81</x>
+     <y>62</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>312</x>
+     <y>78</y>
     </hint>
    </hints>
   </connection>
