@@ -28,10 +28,9 @@ from data_plot_dialog import DataPlotDialog
 import os.path
 
 from qgis.gui import QgsMapLayerProxyModel
-
 from DataPlot.plots.base_plot import BasePlot
-
 from DataPlot.plots.base_plot_webview import plotWebView
+from DataPlot.plots.utils import *
 
 
 
@@ -79,7 +78,16 @@ class DataPlot:
         }
         self.dlg.plotTypeCombo.clear()
         for k,v in self.plot_types.items():
-            self.dlg.plotTypeCombo.addItem( v, k)
+            self.dlg.plotTypeCombo.addItem(v, k)
+
+        # Add data to vertical/horizontal combo
+        self.plot_types = {
+            'vertical': self.tr('Vertical'),
+            'horizontal': self.tr('Horizontal')
+        }
+        self.dlg.orientationCombo.clear()
+        for k,v in self.plot_types.items():
+            self.dlg.orientationCombo.addItem(v, k)
 
 
 
@@ -237,14 +245,26 @@ class DataPlot:
         plot_properties = {
             'opacity': (100 - self.dlg.alpha.value()) / 100.0
         }
+        # Set custom properties based on type
+        customProperties = self.getTypeProperties(ptype)
+        for k,v in customProperties.items():
+            plot_properties[k] = v
+
         p.setProperties( plot_properties )
 
         # Set layout properties
         plot_layout = {
-            'showlegend': self.dlg.legendCheck.isChecked() ,
+            'showlegend': self.dlg.legendCheck.isChecked(),
             'title': self.dlg.plotTitle.text(),
         }
+        # Set custom layout props based on type
+        cLayout = self.getTypeLayout(ptype)
+        for k,v in cLayout.items():
+            plot_layout[k] = v
         p.setLayout( plot_layout )
+
+
+        # Set custom layout properties based on type
 
         html = p.buildPlot()
         print html
@@ -257,6 +277,39 @@ class DataPlot:
         w.show()
         self.dlg.webViewPage.setLayout(layout)
 
+
+    def getTypeProperties(self, ptype):
+        '''
+        Get properties specific to a chart type
+        '''
+        sprop = {}
+        if ptype == 'bar':
+            color = hex_to_rgb(self.dlg.colorButton.color().name())
+            color_line = hex_to_rgb(self.dlg.colorButton2.color().name())
+            width = self.dlg.widthBox.value()
+
+            sprop['marker'] = dict(
+                color = 'rgb' + color,
+                line = dict(
+                    color = 'rgb' + str(color_line),
+                    width = width
+                )
+            )
+
+        return sprop
+
+    def getTypeLayout(self, ptype):
+        '''
+        Get layout properties specific to a chart type
+        '''
+        sprop = {}
+        if ptype == 'bar':
+
+            idx = self.dlg.orientationCombo.currentIndex()
+            ori = self.dlg.orientationCombo.itemData(idx)
+            sprop['orientation'] = ori
+
+        return sprop
 
 
     def unload(self):

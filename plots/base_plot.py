@@ -155,11 +155,9 @@ class BasePlot():
         '''
         Build the instance of the plot
         '''
-        print self.plot_type
-        print self.plot_properties
-        print self.plot_layout
 
-        if self.plot_type == 'pie':
+        pt = self.plot_type
+        if pt == 'pie':
 
             # Add needed properties
             self.plot_properties['labels'] = self.plot_data['x']
@@ -167,6 +165,19 @@ class BasePlot():
 
             # Add plot
             plot = go.Pie(self.plot_properties)
+            self.plot_trace.append(plot)
+
+            # Configure layout
+            layout = go.Layout( self.plot_layout )
+
+        elif pt == 'bar':
+
+            # Add needed properties
+            self.plot_properties['x'] = self.plot_data['x']
+            self.plot_properties['y'] = self.plot_data['y']
+
+            # Add plot
+            plot = go.Bar(self.plot_properties)
             self.plot_trace.append(plot)
 
             # Configure layout
