@@ -1,0 +1,8 @@
+<RCC>
+  <qresource prefix="/plugins/DataPlot">
+    <file>../icons/bar-chart2.png</file>
+    <file>../icons/bar-chart.png</file>
+    <file>../icon3.png</file>
+    <file>../icon.png</file>
+  </qresource>
+</RCC>

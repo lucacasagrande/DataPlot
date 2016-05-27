@@ -22,11 +22,9 @@
 """
 from PyQt4.QtCore import QSettings, QTranslator, qVersion, QCoreApplication
 from PyQt4.QtGui import QAction, QIcon
-# Initialize Qt resources from file resources.py
-import resources
+
 # Import the code for the dialog
 from data_plot_dialog import DataPlotDialog
-from scatter_dialog import ScatterPlotDialog
 import os.path
 
 
@@ -161,7 +159,10 @@ class DataPlot:
     def initGui(self):
         """Create the menu entries and toolbar icons inside the QGIS GUI."""
 
-        icon_path = ':/plugins/DataPlot/icon.png'
+        icon_path = os.path.join(
+            self.plugin_dir,
+            'icon.png'
+        )
         self.add_action(
             icon_path,
             text=self.tr(u'Plots'),
