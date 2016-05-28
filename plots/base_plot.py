@@ -24,13 +24,15 @@
 import os
 
 from qgis.core import QgsMapLayer, QgsVectorLayer, QgsFeature, QgsField, QgsExpression
-from PyQt4.QtCore import QVariant
+from PyQt4.QtCore import *
 import plotly
 import plotly.graph_objs as go
 import tempfile
 from base_plot_webview import plotWebView
 
-class BasePlot():
+class BasePlot(QObject):
+
+    dataPlotAdded = pyqtSignal(object)
 
     plot_layer = None
 
@@ -59,6 +61,7 @@ class BasePlot():
         '''
         Initialize class instance
         '''
+        QObject.__init__(self)
         print u"Initialize plot"
 
     def addLayer(self, layer):
@@ -148,8 +151,6 @@ class BasePlot():
             if a in self.plot_data:
                 self.plot_matrix.append(self.plot_data[a])
 
-        print self.plot_matrix
-
 
     def buildPlot(self):
         '''
@@ -164,8 +165,8 @@ class BasePlot():
             self.plot_properties['values'] = self.plot_data['y']
 
             # Add plot
-            plot = go.Pie(self.plot_properties)
-            self.plot_trace.append(plot)
+            trace = go.Pie(self.plot_properties)
+            self.plot_trace = trace
 
             # Configure layout
             layout = go.Layout( self.plot_layout )
@@ -177,8 +178,8 @@ class BasePlot():
             self.plot_properties['y'] = self.plot_data['y']
 
             # Add plot
-            plot = go.Bar(self.plot_properties)
-            self.plot_trace.append(plot)
+            trace = go.Bar(self.plot_properties)
+            self.plot_trace = trace
 
             # Configure layout
             layout = go.Layout( self.plot_layout )
@@ -186,16 +187,5 @@ class BasePlot():
         else:
             return
 
-        # Build a figure
-        fig = go.Figure(
-            data = self.plot_trace,
-            layout = layout
-        )
 
-        # Generate HTML file
-        html = plotly.offline.plot(
-            fig,
-            show_link=False,
-            output_type='div'
-        )
-        return html
+

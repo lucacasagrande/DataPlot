@@ -31,8 +31,5 @@ class plotWebView(QtWebKit.QWebView):
     def changeBodyBackground(self, color):
         self.page().mainFrame().evaluateJavaScript( "changeBodyBackground('%s')" % color )
 
-    def loadUrl(self, url):
-        self.load(QtCore.QUrl(url))
-
     def loadHtml(self, html):
         self.setHtml(html)

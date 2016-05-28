@@ -26,12 +26,16 @@ from PyQt4.QtGui import QAction, QIcon, QVBoxLayout
 # Import the code for the dialog
 from data_plot_dialog import DataPlotDialog
 import os.path
-
+import tempfile
+import time
 from qgis.gui import QgsMapLayerProxyModel
 from DataPlot.plots.base_plot import BasePlot
 from DataPlot.plots.base_plot_webview import plotWebView
 from DataPlot.plots.utils import *
 
+import plotly
+from plotly import tools
+import plotly.graph_objs as go
 
 
 class DataPlot:
@@ -81,14 +85,15 @@ class DataPlot:
             self.dlg.plotTypeCombo.addItem(v, k)
 
         # Add data to vertical/horizontal combo
-        self.plot_types = {
+        self.orientations = {
             'vertical': self.tr('Vertical'),
             'horizontal': self.tr('Horizontal')
         }
         self.dlg.orientationCombo.clear()
-        for k,v in self.plot_types.items():
+        for k,v in self.orientations.items():
             self.dlg.orientationCombo.addItem(v, k)
 
+        self.plot_figures = []
 
 
         # Declare instance attributes
@@ -204,32 +209,96 @@ class DataPlot:
         # filter only vector layers in the QgsMapLayerComboBox
         self.dlg.LayerCombo.setFilters(QgsMapLayerProxyModel.VectorLayer)
 
-        self.dlg.addPlotButton.clicked.connect(self.addPlot)
+        self.dlg.addPlotButton.clicked.connect(self.instanciateSinglePlot)
+        self.dlg.renderPlotButton.clicked.connect(self.renderPlot)
+
+        w = plotWebView()
+        layout = QVBoxLayout()
+        layout.setContentsMargins(0,0,0,0)
+        layout.setSpacing(0)
+        layout.addWidget(w)
+        w.show()
+        self.webview = w
+        self.dlg.webViewPage.setLayout(layout)
 
 
+    def log(self, message, title="", clear=False):
+        '''
+        Log messages
+        '''
+        if not title:
+            title = str( time.time() )
+        if clear:
+            self.dlg.plotList.clear()
 
-    def addPlot(self):
+        self.dlg.plotList.appendPlainText(u'%s' % str(title).upper())
+        self.dlg.plotList.appendPlainText(u'%s' % str(message))
+        self.dlg.plotList.appendPlainText(u'' )
+
+    def createFigure(self, ftype, cols=2, rows=1):
+        '''
+        Create a plot figure
+        '''
+
+        # Build a figure
+        if ftype == 'pie':
+            figure = go.Figure()
+        else:
+            figure = tools.make_subplots(
+                rows=rows,
+                cols=cols
+            )
+
+        fig_id = time.time()
+
+        return figure
+
+
+    def readPlotParams(self):
         '''
         Adds a new plot configuration
         '''
+        plotParams = {}
+
+        plotParams['layer'] = self.dlg.expFieldX.layer()
+
+        idx = self.dlg.plotTypeCombo.currentIndex()
+        ptype = self.dlg.plotTypeCombo.itemData(idx)
+        plotParams['type'] = ptype
+
+        plotParams['x'] = self.dlg.expFieldX
+        plotParams['y'] = self.dlg.expFieldY
+        plotParams['z'] = self.dlg.expFieldZ
+        plotParams['opacity'] = (100 - self.dlg.alpha.value()) / 100.0
+        plotParams['showlegend'] = self.dlg.legendCheck.isChecked()
+        plotParams['title'] = self.dlg.plotTitle.text()
+
+        return plotParams
+
+    def instanciateSinglePlot(self):
+        '''
+        Uses the base class for instanciating a single plit
+        '''
+        # Get params
+        plotParams = self.readPlotParams()
+
+        # Instanciate the base plot class
         p = BasePlot()
 
         # Add layer
-        p.addLayer( self.dlg.expFieldX.layer() )
+        p.addLayer( plotParams['layer'] )
 
         # Get type
-        idx = self.dlg.plotTypeCombo.currentIndex()
-        ptype = self.dlg.plotTypeCombo.itemData(idx)
-        p.setType( ptype )
+        p.setType( plotParams['type'] )
 
         # Get other properties
 
         # Set data from fields
-        axis = {
-            'x': self.dlg.expFieldX,
-            'y': self.dlg.expFieldY,
-            'z': self.dlg.expFieldZ
-        }
+        axis = {}
+        axis['x'] = plotParams['x']
+        axis['y'] = plotParams['y']
+        axis['z'] = plotParams['z']
+
         p.plot_data = {}
         for k,v in axis.items():
             if not v.currentText():
@@ -243,10 +312,10 @@ class DataPlot:
 
         # Set properties
         plot_properties = {
-            'opacity': (100 - self.dlg.alpha.value()) / 100.0
+            'opacity': plotParams['opacity']
         }
         # Set custom properties based on type
-        customProperties = self.getTypeProperties(ptype)
+        customProperties = self.getTypeProperties(plotParams['type'])
         for k,v in customProperties.items():
             plot_properties[k] = v
 
@@ -254,28 +323,63 @@ class DataPlot:
 
         # Set layout properties
         plot_layout = {
-            'showlegend': self.dlg.legendCheck.isChecked(),
-            'title': self.dlg.plotTitle.text(),
+            'showlegend': plotParams['showlegend'],
+            'title': plotParams['title']
         }
+
         # Set custom layout props based on type
-        cLayout = self.getTypeLayout(ptype)
+        cLayout = self.getTypeLayout(plotParams['type'])
         for k,v in cLayout.items():
             plot_layout[k] = v
         p.setLayout( plot_layout )
 
-
         # Set custom layout properties based on type
+        p.buildPlot()
 
-        html = p.buildPlot()
-        print html
-        w = plotWebView()
-        w.loadHtml(html)
-        layout = QVBoxLayout()
-        layout.setContentsMargins(0,0,0,0)
-        layout.setSpacing(0)
-        layout.addWidget(w)
-        w.show()
-        self.dlg.webViewPage.setLayout(layout)
+        # Create a new figure
+        layout = go.Layout( p.plot_layout )
+        figure = self.createFigure(plotParams['type'], 1, 2)
+        self.log( str(figure) , 'figure created')
+
+        trace = p.plot_trace
+        for k,v in p.plot_layout.items():
+            figure['layout'][k] = v
+
+        if plotParams['type'] != 'pie':
+            figure.append_trace(trace, 1, 1)
+        else:
+            self.log( trace, 'trace for pie' )
+            figure['data'].append( trace )
+
+        self.plot_figures.append(figure)
+
+
+
+
+    def buildPlotHtml(self, figure):
+        '''
+        Build the HTML for a figure
+        '''
+        html = plotly.offline.plot(
+            figure,
+            show_link=False,
+            output_type='div'
+        )
+        return html
+
+
+    def renderPlot(self):
+        '''
+        Insert the added plot to the webview
+        '''
+        self.log( self.plot_figures, 'plot_figures after trace added' )
+        figure = self.plot_figures[0]
+        html = self.buildPlotHtml(figure)
+
+        layout = self.dlg.webViewPage.layout()
+        items = (layout.itemAt(i) for i in range(layout.count()))
+        self.webview.loadHtml(html)
+        self.plot_figures = []
 
 
     def getTypeProperties(self, ptype):
@@ -310,6 +414,9 @@ class DataPlot:
             sprop['orientation'] = ori
 
         return sprop
+
+
+
 
 
     def unload(self):
