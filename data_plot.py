@@ -20,16 +20,17 @@
  *                                                                         *
  ***************************************************************************/
 """
-from PyQt4.QtCore import QSettings, QTranslator, qVersion, QCoreApplication, QUrl
-from PyQt4.QtGui import QAction, QIcon, QVBoxLayout
+from PyQt4.QtCore import QSettings, QTranslator, qVersion, QCoreApplication, QUrl, Qt
+from PyQt4.QtGui import QAction, QIcon, QVBoxLayout, QTableWidgetItem
 
 # Import the code for the dialog
 from data_plot_dialog import DataPlotDialog
+from data_plot_figure import DataPlotFigure
+from data_plot_trace import DataPlotTrace
 import os.path
 import tempfile
 import time
 from qgis.gui import QgsMapLayerProxyModel
-from DataPlot.plots.base_plot import BasePlot
 from DataPlot.plots.base_plot_webview import plotWebView
 from DataPlot.plots.utils import *
 
@@ -93,7 +94,18 @@ class DataPlot:
         for k,v in self.orientations.items():
             self.dlg.orientationCombo.addItem(v, k)
 
-        self.plot_figures = []
+        # Add data to vertical/horizontal combo
+        self.figureTypes = {
+            'single': self.tr(u'Single'),
+            'multiple': self.tr(u'Multiple'),
+            'subplots': self.tr(u'Subplots with axis')
+        }
+        self.dlg.figureTypeCombo.clear()
+        for k,v in self.figureTypes.items():
+            self.dlg.figureTypeCombo.addItem(v, k)
+
+        self.dataPlotFigures = {}
+        self.dataPlotTraces = {}
 
 
         # Declare instance attributes
@@ -209,8 +221,9 @@ class DataPlot:
         # filter only vector layers in the QgsMapLayerComboBox
         self.dlg.LayerCombo.setFilters(QgsMapLayerProxyModel.VectorLayer)
 
-        self.dlg.addPlotButton.clicked.connect(self.instanciateSinglePlot)
-        self.dlg.renderPlotButton.clicked.connect(self.renderPlot)
+        self.dlg.addPlotButton.clicked.connect(self.addTrace)
+        self.dlg.addFigureButton.clicked.connect(self.addFigure)
+        self.dlg.renderFigureButton.clicked.connect(self.renderFigure)
 
         w = plotWebView()
         layout = QVBoxLayout()
@@ -227,31 +240,13 @@ class DataPlot:
         Log messages
         '''
         if not title:
-            title = str( time.time() )
+            title = str( int(round(time.time() * 1000)) )
         if clear:
-            self.dlg.plotList.clear()
+            self.dlg.logText.clear()
 
-        self.dlg.plotList.appendPlainText(u'%s' % str(title).upper())
-        self.dlg.plotList.appendPlainText(u'%s' % str(message))
-        self.dlg.plotList.appendPlainText(u'' )
-
-    def createFigure(self, ftype, cols=2, rows=1):
-        '''
-        Create a plot figure
-        '''
-
-        # Build a figure
-        if ftype == 'pie':
-            figure = go.Figure()
-        else:
-            figure = tools.make_subplots(
-                rows=rows,
-                cols=cols
-            )
-
-        fig_id = time.time()
-
-        return figure
+        self.dlg.logText.appendPlainText(u'%s' % str(title).upper())
+        self.dlg.logText.appendPlainText(u'%s' % str(message))
+        self.dlg.logText.appendPlainText(u'' )
 
 
     def readPlotParams(self):
@@ -275,15 +270,16 @@ class DataPlot:
 
         return plotParams
 
-    def instanciateSinglePlot(self):
+
+    def addTrace(self):
         '''
         Uses the base class for instanciating a single plit
         '''
         # Get params
         plotParams = self.readPlotParams()
 
-        # Instanciate the base plot class
-        p = BasePlot()
+        # Instanciate the trace plot class
+        p = DataPlotTrace()
 
         # Add layer
         p.addLayer( plotParams['layer'] )
@@ -326,60 +322,134 @@ class DataPlot:
             'showlegend': plotParams['showlegend'],
             'title': plotParams['title']
         }
-
         # Set custom layout props based on type
         cLayout = self.getTypeLayout(plotParams['type'])
         for k,v in cLayout.items():
             plot_layout[k] = v
         p.setLayout( plot_layout )
 
-        # Set custom layout properties based on type
+        # Build plot depending on type
         p.buildPlot()
 
-        # Create a new figure
-        layout = go.Layout( p.plot_layout )
-        figure = self.createFigure(plotParams['type'], 1, 2)
-        self.log( str(figure) , 'figure created')
-
+        # Get trace
         trace = p.plot_trace
-        for k,v in p.plot_layout.items():
-            figure['layout'][k] = v
 
-        if plotParams['type'] != 'pie':
-            figure.append_trace(trace, 1, 1)
-        else:
-            self.log( trace, 'trace for pie' )
-            figure['data'].append( trace )
+        # Add trace
+        self.dataPlotTraces[p.plot_id] = p
+        self.log( trace, 'added trace')
 
-        self.plot_figures.append(figure)
+        # Refresh plots table
+        self.refreshPlotTable()
 
+        return trace
 
-
-
-    def buildPlotHtml(self, figure):
+    def refreshPlotTable(self):
         '''
-        Build the HTML for a figure
+        Refresh the table of plots
         '''
-        html = plotly.offline.plot(
-            figure,
-            show_link=False,
-            output_type='div'
+        table = self.dlg.plotTable
+
+        # empty previous content
+        for row in range(table.rowCount()):
+            table.removeRow(row)
+        table.setRowCount(0)
+
+        # Add lines
+        for pid, p in self.dataPlotTraces.items():
+            # Set row and column count
+            twRowCount = table.rowCount()
+
+            # add a new line
+            table.setRowCount( twRowCount + 1 )
+
+            # Id
+            newItem = QTableWidgetItem()
+            newItem.setData( Qt.EditRole, pid )
+            table.setItem(twRowCount, 0, newItem)
+
+            # Type
+            newItem = QTableWidgetItem()
+            newItem.setData( Qt.EditRole, p.plot_type )
+            table.setItem(twRowCount, 1, newItem)
+
+
+    def addFigure(self):
+        '''
+        Create a figure instance
+        '''
+        # Get figure parameters from ui
+        idx = self.dlg.figureTypeCombo.currentIndex()
+        ftype = self.dlg.figureTypeCombo.itemData(idx)
+        fcols = self.dlg.figureCols.value()
+        frows = self.dlg.figureRows.value()
+
+        # Instanciate figure
+        f = DataPlotFigure(
+            figure_type=ftype,
+            figure_cols=fcols,
+            figure_rows=frows
         )
-        return html
 
+        # Add figure to the list
+        self.dataPlotFigures[f.figure_id] = f
+        self.log( f.figure.to_string(), 'added figure')
 
-    def renderPlot(self):
+        # Refresh figure table
+        self.refreshFigureTable()
+
+    def refreshFigureTable(self):
         '''
-        Insert the added plot to the webview
+        Refresh the table of figures
         '''
-        self.log( self.plot_figures, 'plot_figures after trace added' )
-        figure = self.plot_figures[0]
-        html = self.buildPlotHtml(figure)
+        table = self.dlg.figureTable
 
-        layout = self.dlg.webViewPage.layout()
-        items = (layout.itemAt(i) for i in range(layout.count()))
+        # empty previous content
+        for row in range(table.rowCount()):
+            table.removeRow(row)
+        table.setRowCount(0)
+
+        # Add lines
+        for figure_id, f in self.dataPlotFigures.items():
+            # Set row and column count
+            twRowCount = table.rowCount()
+
+            # add a new line
+            table.setRowCount( twRowCount + 1 )
+
+            # Id
+            newItem = QTableWidgetItem()
+            newItem.setData( Qt.EditRole, figure_id )
+            table.setItem(twRowCount, 0, newItem)
+
+            # Type
+            newItem = QTableWidgetItem()
+            newItem.setData( Qt.EditRole, f.figure_type )
+            table.setItem(twRowCount, 1, newItem)
+
+
+
+
+    def renderFigure(self):
+        '''
+        Render a figure and show it in the webview
+        '''
+
+        for figure_id,f in self.dataPlotFigures.items():
+
+            # Add data to figure
+            for pid,p in self.dataPlotTraces.items():
+                f.addTrace( p.plot_trace )
+
+            # Get html from configured figure
+            html = f.buildHtml()
+            break
+
+        # Get webview widget
+        l = self.dlg.webViewPage.layout()
+        items = (l.itemAt(i) for i in range(l.count()))
+
+        # Load html
         self.webview.loadHtml(html)
-        self.plot_figures = []
 
 
     def getTypeProperties(self, ptype):

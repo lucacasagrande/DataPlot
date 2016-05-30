@@ -22,17 +22,18 @@
 """
 
 import os
-
+import time
 from qgis.core import QgsMapLayer, QgsVectorLayer, QgsFeature, QgsField, QgsExpression
 from PyQt4.QtCore import *
 import plotly
 import plotly.graph_objs as go
 import tempfile
-from base_plot_webview import plotWebView
 
-class BasePlot(QObject):
+class DataPlotTrace(QObject):
 
-    dataPlotAdded = pyqtSignal(object)
+    dataPlotTraceAdded = pyqtSignal(object)
+
+    plot_id = None
 
     plot_layer = None
 
@@ -51,7 +52,7 @@ class BasePlot(QObject):
 
     plot_matrix = []
 
-    plot_trace = []
+    plot_trace = None
 
     plot_path = None
 
@@ -62,7 +63,9 @@ class BasePlot(QObject):
         Initialize class instance
         '''
         QObject.__init__(self)
-        print u"Initialize plot"
+
+        self.plot_id = int(round(time.time() * 1000))
+
 
     def addLayer(self, layer):
         '''
@@ -90,20 +93,6 @@ class BasePlot(QObject):
         Set plot type
         '''
         self.plot_type = plot_type
-
-
-    def setAlpha(self, plot_alpha_value):
-        '''
-        Set plot alpha value
-        '''
-        self.plot_alpha_value = plot_alpha_value
-
-
-    def setLegend(self, plot_legend):
-        '''
-        Set plot legend active or not
-        '''
-        self.plot_legend = plot_legend
 
 
     def setTitle(self, plot_title):
@@ -168,9 +157,6 @@ class BasePlot(QObject):
             trace = go.Pie(self.plot_properties)
             self.plot_trace = trace
 
-            # Configure layout
-            layout = go.Layout( self.plot_layout )
-
         elif pt == 'bar':
 
             # Add needed properties
@@ -181,11 +167,13 @@ class BasePlot(QObject):
             trace = go.Bar(self.plot_properties)
             self.plot_trace = trace
 
-            # Configure layout
-            layout = go.Layout( self.plot_layout )
-
         else:
             return
 
-
+    def buildLayout(self):
+        '''
+        Build layout from layout dictionary
+        '''
+        layout = go.Layout( self.plot_layout )
+        return layout
 
