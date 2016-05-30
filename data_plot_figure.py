@@ -24,6 +24,7 @@
 import time
 import plotly
 import plotly.graph_objs as go
+from plotly import tools
 
 class DataPlotFigure():
 
@@ -32,39 +33,62 @@ class DataPlotFigure():
     # id
     figure_id = None
 
-    # type : single, combined, subplots
-    figure_type = None
+    # type : classic or subplots
+    figure_type = ''
 
     # figure data
-    figure_data = []
+    figure_data = {}
+
+    # Traces contained if figure_data
+    figure_traces = []
 
     # number of traces in data
     figure_data_length = 0
 
-    # figure cols and rows
-    figure_cols = 1
-    figure_rows = 1
 
-
-    def __init__(self, figure_type='single', figure_cols=1, figure_rows=1, **kwargs):
+    def __init__(self, figure_type, figure_data={}, **kwargs):
         '''
         Initialize a plot figure
         '''
 
+        # Set properties
         self.figure_id = int(round(time.time() * 1000))
+        self.figure_data = figure_data
 
+        # Set traces from data
+        self.figure_traces = [ p.plot_trace for pid, p in self.figure_data.items() ]
+        self.figure_data_length = len(self.figure_traces)
+
+        # Set figure type based on data
         self.figure_type = figure_type
-        self.figure_cols = figure_cols
-        self.figure_rows = figure_rows
+        canSubplot = True
+        subplotIncompatibleTypes = ['pie']
+        for pid, p in figure_data.items():
+            if p.plot_type in subplotIncompatibleTypes:
+                canSubplot = False
+                break
+        if figure_type == 'subplots' and not canSubplot:
+            self.figure_type = 'classic'
 
-        if figure_type in ['subplots']:
+        # Create figure
+        self.createFigure()
+
+        # Add traces
+        self.addTraces()
+
+
+    def createFigure(self):
+        '''
+        Create figure
+        '''
+
+        if self.figure_type in ['subplots']:
+            cols = 2 if self.figure_data_length > 1 else 1
+            rows = int( self.figure_data_length / 2 ) + (self.figure_data_length % 2 )
             figure = tools.make_subplots(
-                rows=figure_rows,
-                cols=figure_cols
+                cols=cols,
+                rows=rows
             )
-
-        elif figure_type in ['single', 'multiple'] :
-            figure = go.Figure()
 
         else:
             figure = go.Figure()
@@ -72,31 +96,56 @@ class DataPlotFigure():
         self.figure = figure
 
 
-    def addTrace(self, trace):
+
+    def addTraces(self):
         '''
         Add some trace to the figure
         '''
-        self.figure_data.append(trace)
-        self.figure_data_length = len(self.figure_data)
 
-        if self.figure_type in ['single', 'multiple']:
-            self.figure['data'].append( trace )
+        # Count lines in the rendered plot grid
+        rows = int( self.figure_data_length / 2 ) + (self.figure_data_length % 2 )
+        print "rows number = %s " % rows
 
-        elif self.figure_type in ['subplots']:
-            self.figure.append_trace(trace, 1, 1)
+        # Add each trace in the right position in the grid
+        i=0
+        for pid, p in self.figure_data.items():
+            trace = p.plot_trace
 
-        else:
-            return
+            # Subplots - only for axis (no Pie chart)
+            if self.figure_type in ['subplots']:
+                col = 1 + i % 2
+                row = int(i / 2) + 1
+                print "col=%s row=%s" % (col, row)
+                self.figure.append_trace(
+                    trace, row, col
+                )
 
-    def setLayout(self):
+            # One figure with multiple plots
+            else:
+                if p.plot_type == 'pie' and self.figure_data_length > 1:
+                    rh = float(1) / rows
+                    dxa = 0 if i % 2 == 0 else 0.52
+                    dxb = 0.48 if i % 2 == 0 else 1
+                    row = int(i / 2) + 1
+                    dya = row * rh - rh
+                    dyb = row * rh
+                    domain = {
+                        'x': [dxa, dxb],
+                        'y': [dya, dyb]
+                    }
+                    trace['domain'] = domain
+                self.figure['data'].append( trace )
+
+            i+=1
+
+
+    def setLayout(self, p):
         '''
         Set figure layout
         '''
-        return
-        # Code taken from trace : need modification
-        #layout = p.buildLayout()
-        #for k,v in p.plot_layout.items():
-            #figure['layout'][k] = v
+        layout = p.buildLayout()
+        for k,v in p.plot_layout.items():
+            figure['layout'][k] = v
 
 
 

@@ -96,16 +96,15 @@ class DataPlot:
 
         # Add data to vertical/horizontal combo
         self.figureTypes = {
-            'single': self.tr(u'Single'),
-            'multiple': self.tr(u'Multiple'),
-            'subplots': self.tr(u'Subplots with axis')
+            'classic': self.tr(u'Classic'),
+            'subplots': self.tr(u'Subplots with shared axis')
         }
         self.dlg.figureTypeCombo.clear()
         for k,v in self.figureTypes.items():
             self.dlg.figureTypeCombo.addItem(v, k)
 
-        self.dataPlotFigures = {}
         self.dataPlotTraces = {}
+        self.dataPlotFigure = None
 
 
         # Declare instance attributes
@@ -222,7 +221,6 @@ class DataPlot:
         self.dlg.LayerCombo.setFilters(QgsMapLayerProxyModel.VectorLayer)
 
         self.dlg.addPlotButton.clicked.connect(self.addTrace)
-        self.dlg.addFigureButton.clicked.connect(self.addFigure)
         self.dlg.renderFigureButton.clicked.connect(self.renderFigure)
 
         w = plotWebView()
@@ -341,7 +339,7 @@ class DataPlot:
         # Refresh plots table
         self.refreshPlotTable()
 
-        return trace
+
 
     def refreshPlotTable(self):
         '''
@@ -373,60 +371,23 @@ class DataPlot:
             table.setItem(twRowCount, 1, newItem)
 
 
-    def addFigure(self):
+    def createFigure(self):
         '''
         Create a figure instance
         '''
         # Get figure parameters from ui
         idx = self.dlg.figureTypeCombo.currentIndex()
         ftype = self.dlg.figureTypeCombo.itemData(idx)
-        fcols = self.dlg.figureCols.value()
-        frows = self.dlg.figureRows.value()
 
         # Instanciate figure
         f = DataPlotFigure(
             figure_type=ftype,
-            figure_cols=fcols,
-            figure_rows=frows
+            figure_data=self.dataPlotTraces
         )
 
-        # Add figure to the list
-        self.dataPlotFigures[f.figure_id] = f
+        # Add figure to self
+        self.dataPlotFigure = f
         self.log( f.figure.to_string(), 'added figure')
-
-        # Refresh figure table
-        self.refreshFigureTable()
-
-    def refreshFigureTable(self):
-        '''
-        Refresh the table of figures
-        '''
-        table = self.dlg.figureTable
-
-        # empty previous content
-        for row in range(table.rowCount()):
-            table.removeRow(row)
-        table.setRowCount(0)
-
-        # Add lines
-        for figure_id, f in self.dataPlotFigures.items():
-            # Set row and column count
-            twRowCount = table.rowCount()
-
-            # add a new line
-            table.setRowCount( twRowCount + 1 )
-
-            # Id
-            newItem = QTableWidgetItem()
-            newItem.setData( Qt.EditRole, figure_id )
-            table.setItem(twRowCount, 0, newItem)
-
-            # Type
-            newItem = QTableWidgetItem()
-            newItem.setData( Qt.EditRole, f.figure_type )
-            table.setItem(twRowCount, 1, newItem)
-
-
 
 
     def renderFigure(self):
@@ -434,15 +395,11 @@ class DataPlot:
         Render a figure and show it in the webview
         '''
 
-        for figure_id,f in self.dataPlotFigures.items():
+        self.createFigure()
+        self.log( self.dataPlotFigure.figure.to_string(), 'final figure')
 
-            # Add data to figure
-            for pid,p in self.dataPlotTraces.items():
-                f.addTrace( p.plot_trace )
-
-            # Get html from configured figure
-            html = f.buildHtml()
-            break
+        # Get html from configured figure
+        html = self.dataPlotFigure.buildHtml()
 
         # Get webview widget
         l = self.dlg.webViewPage.layout()
@@ -450,6 +407,9 @@ class DataPlot:
 
         # Load html
         self.webview.loadHtml(html)
+
+        # Go to webview
+        self.dlg.listWidget.setCurrentRow(1)
 
 
     def getTypeProperties(self, ptype):
@@ -505,6 +465,7 @@ class DataPlot:
 
         # show the dialog
         self.dlg.show()
+        self.dlg.listWidget.setCurrentRow(0)
         # Run the dialog event loop
         result = self.dlg.exec_()
         # See if OK was pressed
