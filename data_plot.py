@@ -463,10 +463,10 @@ class DataPlot:
                 )
             )
 
-            # idx = self.dlg.orientationCombo.currentIndex()
-            # ori = self.dlg.orientationCombo.itemData(idx)
-            #
-            # sprop['orientation'] = ori
+            idx = self.dlg.orientationCombo.currentIndex()
+            ori = self.dlg.orientationCombo.itemData(idx)
+            
+            sprop['orientation'] = ori
 
         return sprop
 
