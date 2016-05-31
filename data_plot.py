@@ -104,7 +104,7 @@ class DataPlot:
             self.dlg.figureTypeCombo.addItem(v, k)
 
         self.dataPlotTraces = {}
-        self.dataPlotFigure = None
+        self.dataPlotFigures = []
 
 
         # Declare instance attributes
@@ -221,7 +221,7 @@ class DataPlot:
         self.dlg.LayerCombo.setFilters(QgsMapLayerProxyModel.VectorLayer)
 
         self.dlg.addPlotButton.clicked.connect(self.addTrace)
-        self.dlg.renderFigureButton.clicked.connect(self.renderFigure)
+        self.dlg.renderFigureButton.clicked.connect(self.renderFigures)
 
         w = plotWebView()
         layout = QVBoxLayout()
@@ -371,42 +371,75 @@ class DataPlot:
             table.setItem(twRowCount, 1, newItem)
 
 
-    def createFigure(self):
+    def createFigures(self):
         '''
         Create a figure instance
         '''
+        # Reset previous figures
+        self.dataPlotFigures = []
+
         # Get figure parameters from ui
         idx = self.dlg.figureTypeCombo.currentIndex()
         ftype = self.dlg.figureTypeCombo.itemData(idx)
 
+        # Separate incompatible charts
+        a = self.dataPlotTraces
+        pie_traces = dict( (k,v) for k,v in a.items() if v.plot_type == 'pie' )
+        other_traces = dict( (k,v) for k,v in a.items() if v.plot_type != 'pie' )
+
+        if pie_traces:
         # Instanciate figure
-        f = DataPlotFigure(
-            figure_type=ftype,
-            figure_data=self.dataPlotTraces
-        )
+            f1 = DataPlotFigure(
+                figure_type=ftype,
+                figure_data=pie_traces
+            )
+            # Add figure to self
+            self.dataPlotFigures.append(f1)
+            self.log( f1.figure.to_string(), 'added figure')
 
-        # Add figure to self
-        self.dataPlotFigure = f
-        self.log( f.figure.to_string(), 'added figure')
+        if other_traces:
+            # Instanciate figure
+            f2 = DataPlotFigure(
+                figure_type=ftype,
+                figure_data=other_traces
+            )
+            # Add figure to self
+            self.dataPlotFigures.append(f2)
+            self.log( f2.figure.to_string(), 'added figure')
 
 
-    def renderFigure(self):
+    def renderFigures(self):
         '''
         Render a figure and show it in the webview
         '''
+        # Create needed figures
+        self.createFigures()
+        print self.dataPlotFigures
+        # Get html from configured figures
+        html = ''
+        for i,figure in enumerate(self.dataPlotFigures):
+            include_plotlyjs=False if i>0 else True
+            html+= figure.buildHtml(include_plotlyjs)
 
-        self.createFigure()
-        self.log( self.dataPlotFigure.figure.to_string(), 'final figure')
+        html = html.replace(
+            '</script><div',
+            '</script><table width="100%"><tr><td><div'
+        )
+        html = html + '</td></tr></table>'
 
-        # Get html from configured figure
-        html = self.dataPlotFigure.buildHtml()
+        # Create temp file
+        tmpdir = tempfile.mkdtemp()
+        predictable_filename = 'dataplot.html'
+        tpath = os.path.join(tmpdir, predictable_filename)
+        with open(tpath, 'w') as afile:
+            afile.write(html)
 
         # Get webview widget
         l = self.dlg.webViewPage.layout()
         items = (l.itemAt(i) for i in range(l.count()))
 
         # Load html
-        self.webview.loadHtml(html)
+        self.webview.loadUrl(tpath)
 
         # Go to webview
         self.dlg.listWidget.setCurrentRow(1)

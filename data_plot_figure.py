@@ -149,14 +149,16 @@ class DataPlotFigure():
 
 
 
-    def buildHtml(self):
+    def buildHtml(self, include_plotlyjs=True):
         '''
         Create HTML content for the figure
         '''
+
         html = plotly.offline.plot(
             self.figure,
             show_link=False,
-            output_type='div'
+            output_type='div',
+            include_plotlyjs=include_plotlyjs
         )
         return html
 
