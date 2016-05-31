@@ -87,8 +87,8 @@ class DataPlot:
 
         # Add data to vertical/horizontal combo
         self.orientations = {
-            'vertical': self.tr('Vertical'),
-            'horizontal': self.tr('Horizontal')
+            'v': self.tr('Vertical'),
+            'h': self.tr('Horizontal')
         }
         self.dlg.orientationCombo.clear()
         for k,v in self.orientations.items():
@@ -462,6 +462,11 @@ class DataPlot:
                     width = width
                 )
             )
+
+            # idx = self.dlg.orientationCombo.currentIndex()
+            # ori = self.dlg.orientationCombo.itemData(idx)
+            #
+            # sprop['orientation'] = ori
 
         return sprop
 
