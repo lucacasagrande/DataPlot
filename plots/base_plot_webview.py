@@ -2,6 +2,7 @@
 #-*- coding:utf-8 -*-
 
 from PyQt4 import QtCore, QtGui, QtWebKit
+from PyQt4.QtCore import QUrl
 
 getJsValue = """
 
@@ -33,3 +34,6 @@ class plotWebView(QtWebKit.QWebView):
 
     def loadHtml(self, html):
         self.setHtml(html)
+
+    def loadUrl(self, url):
+        self.load(QUrl(url))
