@@ -160,6 +160,18 @@ class DataPlotFigure():
         )
         return html
 
+
+    def buildImage(self):
+        '''
+        Export as image
+        '''
+        return
+        #plotly.image.save_as(
+            #self.figure,
+            #'my_plot.png'
+        #)
+
+
     def exportToJSON(self):
         '''
         Export the figure to JSON
