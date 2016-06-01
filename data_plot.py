@@ -94,11 +94,46 @@ class DataPlot:
         for k,v in self.orientations.items():
             self.dlg.orientationCombo.addItem(v, k)
 
+        # Add data to symbol type combo
+        self.symbolType = {
+            'markers': self.tr('Points'),
+            'lines': self.tr('Lines'),
+            'markers+lines': self.tr('Points and Lines')
+        }
+        self.dlg.symbolCombo.clear()
+        for k,v in self.symbolType.items():
+            self.dlg.symbolCombo.addItem(v, k)
+
         # Add data to vertical/horizontal combo
         self.figureTypes = {
             'classic': self.tr(u'Classic'),
             'subplots': self.tr(u'Subplots with shared axis')
         }
+
+        # Add data for the showing statistics type (box plot only)
+        self.statType = {
+            True: self.tr('Mean'),
+            'sd': self.tr('Standard Deviation'),
+            False: self.tr('No Statistics')
+        }
+        self.dlg.statCombo.clear()
+        for k,v in self.statType.items():
+            self.dlg.statCombo.addItem(v, k)
+
+        # Add data for the showing outliers (box plot only)
+        self.outlierType = {
+            False: self.tr('No Outliers'),
+            'all': self.tr('Show All Outliers'),
+            'suspectedoutliers': self.tr('Only Suspected Outliers'),
+            'outliers': self.tr('Outliers')
+
+        }
+        self.dlg.outlierCombo.clear()
+        for k,v in self.outlierType.items():
+            self.dlg.outlierCombo.addItem(v, k)
+
+
+        #
         self.dlg.figureTypeCombo.clear()
         for k,v in self.figureTypes.items():
             self.dlg.figureTypeCombo.addItem(v, k)
@@ -463,10 +498,66 @@ class DataPlot:
                 )
             )
 
-            # idx = self.dlg.orientationCombo.currentIndex()
-            # ori = self.dlg.orientationCombo.itemData(idx)
-            #
-            # sprop['orientation'] = ori
+            idx = self.dlg.orientationCombo.currentIndex()
+            ori = self.dlg.orientationCombo.itemData(idx)
+
+            sprop['orientation'] = ori
+
+
+
+
+        if ptype == 'scatter':
+            color = hex_to_rgb(self.dlg.colorButton.color().name())
+            color_line = hex_to_rgb(self.dlg.colorButton2.color().name())
+            width = self.dlg.widthBox.value()
+            size = self.dlg.Size.value()
+
+            idx = self.dlg.symbolCombo.currentIndex()
+            mode = self.dlg.symbolCombo.itemData(idx)
+
+            sprop['mode'] = mode
+
+            sprop['marker'] = dict(
+                color = 'rgb' + color,
+                size = size,
+                line = dict(
+                    color = 'rgb' + str(color_line),
+                    width = width
+                )
+            )
+
+        if ptype == 'box':
+            color = hex_to_rgb(self.dlg.colorButton.color().name())
+            color_line = hex_to_rgb(self.dlg.colorButton2.color().name())
+            width = self.dlg.widthBox.value()
+
+
+            # box fill color
+            sprop['fillcolor'] = 'rgb' + color
+
+            # outlines box color and width
+            sprop['line'] = dict(
+                color = 'rgb' + color_line,
+                width = width
+            )
+
+            # optional outlier points color
+            sprop['marker'] = dict(
+                color = 'rgb' + color,
+            )
+
+
+            idx = self.dlg.statCombo.currentIndex()
+            stat = self.dlg.statCombo.itemData(idx)
+
+            sprop['boxmean'] = stat
+
+            idx = self.dlg.outlierCombo.currentIndex()
+            out = self.dlg.outlierCombo.itemData(idx)
+
+            sprop['boxpoints'] = out
+
+
 
         return sprop
 
