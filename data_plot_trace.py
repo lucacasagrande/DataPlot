@@ -167,6 +167,28 @@ class DataPlotTrace(QObject):
             trace = go.Bar(self.plot_properties)
             self.plot_trace = trace
 
+        elif pt == 'scatter':
+
+            # Add needed properties
+            self.plot_properties['x'] = self.plot_data['x']
+            self.plot_properties['y'] = self.plot_data['y']
+
+            # Add plot
+            trace = go.Scatter(self.plot_properties)
+            self.plot_trace = trace
+
+        elif pt == 'box':
+
+            # Add needed properties
+            self.plot_properties['x'] = self.plot_data['x']
+            self.plot_properties['y'] = self.plot_data['y']
+
+            # Add plot
+            trace = go.Box(self.plot_properties)
+            self.plot_trace = trace
+
+
+
         else:
             return
 
@@ -176,4 +198,3 @@ class DataPlotTrace(QObject):
         '''
         layout = go.Layout( self.plot_layout )
         return layout
-
