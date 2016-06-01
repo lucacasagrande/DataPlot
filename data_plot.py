@@ -558,7 +558,6 @@ class DataPlot:
             sprop['boxpoints'] = out
 
 
-
         return sprop
 
     def getTypeLayout(self, ptype):
