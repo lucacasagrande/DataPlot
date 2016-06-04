@@ -329,13 +329,19 @@ class DataPlot:
         axis['z'] = plotParams['z']
 
         p.plot_data = {}
+        fieldX = ''
+        fieldXType = 'field'
         for k,v in axis.items():
             if not v.currentText():
                 continue
             if v.currentField()[1]:
-                p.setAxisDataFromLayer(k, fieldName=v.currentText() )
+                fieldX = v.currentText()
+                fieldXType = 'field'
+                p.setAxisDataFromLayer(k, fieldName=fieldX )
             else:
-                p.setAxisDataFromLayer(k, expression=v.currentField()[0] )
+                fieldX = v.currentField()[0]
+                fieldXType = 'expression'
+                p.setAxisDataFromLayer(k, expression=fieldX )
 
         p.setMatrix()
 
@@ -366,6 +372,13 @@ class DataPlot:
 
         # Get trace
         trace = p.plot_trace
+
+        # Add a name with layer id and x field
+        trace['name'] = '%s|%s|%s' % (
+            p.plot_layer.id(),
+            fieldXType,
+            fieldX
+        )
 
         # Add trace
         self.dataPlotTraces[p.plot_id] = p
@@ -430,7 +443,7 @@ class DataPlot:
             )
             # Add figure to self
             self.dataPlotFigures.append(f1)
-            self.log( f1.figure.to_string(), 'added figure')
+            self.log( f1.figure, 'added figure')
 
         if other_traces:
             # Instanciate figure
@@ -440,7 +453,7 @@ class DataPlot:
             )
             # Add figure to self
             self.dataPlotFigures.append(f2)
-            self.log( f2.figure.to_string(), 'added figure')
+            self.log( f2.figure, 'added figure')
 
 
     def renderFigures(self):
@@ -449,7 +462,7 @@ class DataPlot:
         '''
         # Create needed figures
         self.createFigures()
-        print self.dataPlotFigures
+
         # Get html from configured figures
         html = ''
         for i,figure in enumerate(self.dataPlotFigures):
@@ -460,12 +473,18 @@ class DataPlot:
             '</script><div',
             '</script><table width="100%"><tr><td><div'
         )
-        html = html + '</td></tr></table>'
+        html+= '</td></tr></table>'
+
+        html+= '<div id="dataPlotLog">Future log</div>'
+
+        # Add javascript code to interact with QGIS
+        html+= self.getJavascriptInteractionCode()
 
         # Create temp file
         tmpdir = tempfile.mkdtemp()
         predictable_filename = 'dataplot.html'
         tpath = os.path.join(tmpdir, predictable_filename)
+        print tpath
         with open(tpath, 'w') as afile:
             afile.write(html)
 
@@ -479,6 +498,16 @@ class DataPlot:
         # Go to webview
         self.dlg.listWidget.setCurrentRow(1)
 
+
+    def getJavascriptInteractionCode(self):
+        '''
+        Add some javascript code to interact with QGIS
+        '''
+        js = ''
+        with open( os.path.join( self.plugin_dir, 'qgisJsInteraction.js'), 'r' ) as jsfile:
+            js = jsfile.read()
+
+        return js
 
     def getTypeProperties(self, ptype):
         '''

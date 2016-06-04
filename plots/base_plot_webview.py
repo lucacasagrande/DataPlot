@@ -3,14 +3,10 @@
 
 from PyQt4 import QtCore, QtGui, QtWebKit
 from PyQt4.QtCore import QUrl
+import json
 
-getJsValue = """
-
-myWindow.showMessage('initial color ' + document.body.style.background);
-function changeBodyBackground(color){
-    document.body.style.background = color;
-    myWindow.showMessage('color changed into ' + color);
-}
+loadTest = """
+plotWebView.log('Page loaded !');
 """
 
 class plotWebView(QtWebKit.QWebView):
@@ -22,18 +18,24 @@ class plotWebView(QtWebKit.QWebView):
         self.loadFinished.connect(self.on_loadFinished)
 
     @QtCore.pyqtSlot(str)
-    def showMessage(self, message):
-        print "Message from website:", message
+    def log(self, data):
+        print "log"
+        print data
 
     @QtCore.pyqtSlot()
     def on_loadFinished(self):
-        self.page().mainFrame().evaluateJavaScript(getJsValue)
-
-    def changeBodyBackground(self, color):
-        self.page().mainFrame().evaluateJavaScript( "changeBodyBackground('%s')" % color )
+        self.page().mainFrame().evaluateJavaScript(loadTest)
 
     def loadHtml(self, html):
         self.setHtml(html)
 
     def loadUrl(self, url):
         self.load(QUrl(url))
+
+    @QtCore.pyqtSlot(str)
+    def json_encode(self, jsobj):
+        return json.dumps(jsobj)
+
+    @QtCore.pyqtSlot()
+    def json_decode(self, jsstr):
+        return json.loads(jsstr)

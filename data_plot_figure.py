@@ -104,7 +104,6 @@ class DataPlotFigure():
 
         # Count lines in the rendered plot grid
         rows = int( self.figure_data_length / 2 ) + (self.figure_data_length % 2 )
-        print "rows number = %s " % rows
 
         # Add each trace in the right position in the grid
         i=0
@@ -115,7 +114,6 @@ class DataPlotFigure():
             if self.figure_type in ['subplots']:
                 col = 1 + i % 2
                 row = int(i / 2) + 1
-                print "col=%s row=%s" % (col, row)
                 self.figure.append_trace(
                     trace, row, col
                 )
