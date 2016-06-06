@@ -188,6 +188,16 @@ class DataPlotTrace(QObject):
             self.plot_trace = trace
 
 
+        elif pt == 'histogram':
+
+            # Add needed properties
+            self.plot_properties['x'] = self.plot_data['x']
+
+            # Add plot
+            trace = go.Histogram(self.plot_properties)
+            self.plot_trace = trace
+
+
 
         else:
             return
