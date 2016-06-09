@@ -133,6 +133,16 @@ class DataPlot:
             self.dlg.outlierCombo.addItem(v, k)
 
 
+        # Add overlaying mode for bars
+        self.overlaying = {
+            'overlay': self.tr('Overlay'),
+            'stack': self.tr('Stacked')
+        }
+        self.dlg.histCombo.clear()
+        for k,v in self.overlaying.items():
+            self.dlg.histCombo.addItem(v, k)
+
+
         #
         self.dlg.figureTypeCombo.clear()
         for k,v in self.figureTypes.items():
@@ -608,6 +618,16 @@ class DataPlot:
             sprop['boxpoints'] = out
 
 
+        if ptype == 'histogram':
+            color = hex_to_rgb(self.dlg.colorButton.color().name())
+
+            # bar color
+            sprop['marker'] = dict(
+                color = 'rgb' + color,
+            )
+
+
+
         return sprop
 
     def getTypeLayout(self, ptype):
@@ -621,7 +641,15 @@ class DataPlot:
             ori = self.dlg.orientationCombo.itemData(idx)
             sprop['orientation'] = ori
 
+        elif ptype == 'histogram':
+            # bar overlaying mode
+            idx = self.dlg.histCombo.currentIndex()
+            over = self.dlg.histCombo.itemData(idx)
+
+            sprop['barmode'] = over
+
         return sprop
+
 
 
 
