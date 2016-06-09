@@ -125,7 +125,7 @@ QListWidget::item::selected {
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>693</width>
+                    <width>711</width>
                     <height>496</height>
                    </rect>
                   </property>
@@ -478,6 +478,18 @@ QListWidget::item::selected {
                  <layout class="QVBoxLayout" name="verticalLayout_9">
                   <item>
                    <widget class="QTableWidget" name="plotTable">
+                    <property name="editTriggers">
+                     <set>QAbstractItemView::AnyKeyPressed|QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed|QAbstractItemView::SelectedClicked</set>
+                    </property>
+                    <property name="alternatingRowColors">
+                     <bool>true</bool>
+                    </property>
+                    <property name="selectionMode">
+                     <enum>QAbstractItemView::ExtendedSelection</enum>
+                    </property>
+                    <property name="selectionBehavior">
+                     <enum>QAbstractItemView::SelectRows</enum>
+                    </property>
                     <column>
                      <property name="text">
                       <string>Id</string>
@@ -493,6 +505,13 @@ QListWidget::item::selected {
                       <string>Layer</string>
                      </property>
                     </column>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QPushButton" name="removePlotButton">
+                    <property name="text">
+                     <string>Remove selected plot from list</string>
+                    </property>
                    </widget>
                   </item>
                  </layout>

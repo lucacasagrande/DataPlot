@@ -256,6 +256,7 @@ class DataPlot:
         self.dlg.LayerCombo.setFilters(QgsMapLayerProxyModel.VectorLayer)
 
         self.dlg.addPlotButton.clicked.connect(self.addTrace)
+        self.dlg.removePlotButton.clicked.connect(self.removeTrace)
         self.dlg.renderFigureButton.clicked.connect(self.renderFigures)
 
         w = plotWebView()
@@ -387,6 +388,26 @@ class DataPlot:
         # Refresh plots table
         self.refreshPlotTable()
 
+    def removeTrace(self):
+        '''
+        Remove selected trace
+        '''
+        # Get selected lines
+        table = self.dlg.plotTable
+        sm = table.selectionModel()
+        lines = sm.selectedRows()
+        if not lines:
+            return
+
+        # Modify values for each line
+        for index in lines:
+            row = index.row()
+            id_item = table.item( row, 0 )
+            trace_id = id_item.data(0)
+            table.removeRow(row)
+            print self.dataPlotTraces
+            self.dataPlotTraces.pop(trace_id, None)
+            print self.dataPlotTraces
 
 
     def refreshPlotTable(self):
@@ -475,7 +496,7 @@ class DataPlot:
         )
         html+= '</td></tr></table>'
 
-        html+= '<div id="dataPlotLog">Future log</div>'
+        html+= '<div id="dataPlotLog"></div>'
 
         # Add javascript code to interact with QGIS
         html+= self.getJavascriptInteractionCode()
