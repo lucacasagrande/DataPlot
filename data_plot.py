@@ -85,6 +85,64 @@ class DataPlot:
         for k,v in self.plot_types.items():
             self.dlg.plotTypeCombo.addItem(v, k)
 
+        self.plot_types_widgets = {
+            self.dlg.LayerCombo: ['all'],
+            self.dlg.LayerCombo_label: ['all'],
+            self.dlg.expFieldX: ['all'],
+            self.dlg.expFieldY: ['all'],
+            self.dlg.legendCheck: ['all'],
+            self.dlg.plotTitle: ['all'],
+            self.dlg.alpha: ['all'],
+            self.dlg.alpha_label: ['all'],
+            self.dlg.alphaBox: ['all'],
+
+            self.dlg.colorButton: ['all_but_pie'],
+            self.dlg.colorButton_label: ['all_but_pie'],
+            self.dlg.xAxisCheck: ['all_but_pie'],
+            self.dlg.xAxisText: ['all_but_pie'],
+            self.dlg.yAxisCheck: ['all_but_pie'],
+            self.dlg.yAxisText: ['all_but_pie'],
+
+            self.dlg.colorButton2: ['bar', 'box'],
+            self.dlg.colorButton2_label: ['bar', 'box'],
+            self.dlg.widthBox: ['bar', 'box'],
+            self.dlg.widthBox_label: ['bar', 'box'],
+            self.dlg.barCombo: ['bar'],
+            self.dlg.barCombo_label: ['bar'],
+            self.dlg.orientationCombo: ['bar'],
+            self.dlg.orientationCombo_label: ['bar'],
+
+            self.dlg.histCombo: ['histogram'],
+
+            self.dlg.outlierCombo: ['box'],
+            self.dlg.outlierCombo_label: ['box'],
+            self.dlg.statCombo: ['box'],
+            self.dlg.statCombo_label: ['box'],
+
+            self.dlg.rugCheck: ['distribution'],
+            self.dlg.histCheck: ['distribution'],
+            self.dlg.curveCheck: ['distribution'],
+            self.dlg.binSize: ['distribution'],
+            self.dlg.curveCombo: ['distribution'],
+
+            self.dlg.regressionCheck: ['scatter'],
+            self.dlg.equationCheck: ['scatter'],
+            self.dlg.rangeCheck: ['scatter'],
+            self.dlg.logXCheck: ['scatter'],
+            self.dlg.logYCheck: ['scatter'],
+            self.dlg.symbolCombo: ['scatter','scatter3d'],
+            self.dlg.symbolCombo_label: ['scatter','scatter3d'],
+            self.dlg.Size: ['scatter','scatter3d'],
+            self.dlg.Size_label: ['scatter','scatter3d'],
+            self.dlg.dataDefined: ['scatter'],
+
+            self.dlg.expFieldZ: ['scatter3d'],
+            self.dlg.expFieldZ_label: ['scatter3d'],
+            self.dlg.dataDefined: ['scatter3d'],
+            self.dlg.zAxisCheck: ['scatter3d'],
+            self.dlg.zAxisText: ['scatter3d']
+        }
+
         # Add data to vertical/horizontal combo
         self.orientations = {
             'v': self.tr('Vertical'),
@@ -269,6 +327,8 @@ class DataPlot:
         self.dlg.removePlotButton.clicked.connect(self.removeTrace)
         self.dlg.renderFigureButton.clicked.connect(self.renderFigures)
 
+        self.dlg.plotTypeCombo.currentIndexChanged.connect(self.refreshPlotWidgets)
+
         w = plotWebView()
         layout = QVBoxLayout()
         layout.setContentsMargins(0,0,0,0)
@@ -293,6 +353,23 @@ class DataPlot:
         self.dlg.logText.appendPlainText(u'' )
 
 
+    def refreshPlotWidgets(self, idx):
+        '''
+        Hide of show widgets specific to
+        current plot type
+        '''
+        cb = self.dlg.plotTypeCombo
+        ptype = cb.itemData(idx)
+
+        for k,v in self.plot_types_widgets.items():
+            active = ptype in v or 'all' in v or ( ptype != 'pie' and 'all_but_pie' in v )
+            k.setEnabled(active)
+            try:
+                k.setVisible(active)
+            except:
+                continue
+
+
     def readPlotParams(self):
         '''
         Adds a new plot configuration
@@ -300,9 +377,9 @@ class DataPlot:
         plotParams = {}
 
         plotParams['layer'] = self.dlg.expFieldX.layer()
-
-        idx = self.dlg.plotTypeCombo.currentIndex()
-        ptype = self.dlg.plotTypeCombo.itemData(idx)
+        cb = self.dlg.plotTypeCombo
+        idx = cb.currentIndex()
+        ptype = cb.itemData(idx)
         plotParams['type'] = ptype
 
         plotParams['x'] = self.dlg.expFieldX
@@ -519,10 +596,6 @@ class DataPlot:
         with open(tpath, 'w') as afile:
             afile.write(html)
 
-        # Get webview widget
-        l = self.dlg.webViewPage.layout()
-        items = (l.itemAt(i) for i in range(l.count()))
-
         # Load html
         self.webview.loadUrl(tpath)
 
@@ -672,6 +745,9 @@ class DataPlot:
         # show the dialog
         self.dlg.show()
         self.dlg.listWidget.setCurrentRow(0)
+
+        self.refreshPlotWidgets( self.dlg.plotTypeCombo.currentIndex())
+
         # Run the dialog event loop
         result = self.dlg.exec_()
         # See if OK was pressed
