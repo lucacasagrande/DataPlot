@@ -10,12 +10,12 @@
         });
     });
 
-    function logData(a){
+    function sendData(action, a){
         console.log( a);
         var ajson = convertToJson(a);
         if( typeof(plotWebView) != 'undefined' )
-            plotWebView.log( convertToJson(a) );
-        document.getElementById('dataPlotLog').innerHTML = ajson;
+            plotWebView.processData( action, ajson );
+        //document.getElementById('dataPlotLog').innerHTML = ajson;
     }
 
     function convertToJson(data){
@@ -27,17 +27,30 @@
     }
 
     function toggleSelection(div,data){
-        //logData(data);
+
         var pts = '';
+        var pprop = {}
+        if( div.data.length ){
+            pdata = div.data[0];
+            for(var a in pdata){
+                if( a != 'x' && a != 'y' && a != 'z' && a != 'labels' && a != 'values' ){
+                    pprop[a] = pdata[a];
+                }
+            }
+
+        }
+
         for(var i=0; i < data.points.length; i++){
             var d = data.points[i];
             if( 'x' in d ){
-                var ret = { 'x': d.x, 'y':d.y };
+                var ret = { 'x': d.x, 'y':d.y, 'properties': pprop };
             }
             if( 'label' in d){
-                var ret = { 'label': d.label, 'value':d.v }
+                var ret = { 'label': d.label, 'value':d.v, 'properties': pprop };
             }
-            logData(ret)
+
+            // Action = select QGIS features by expression
+            sendData('select', ret);
 
         }
     }
