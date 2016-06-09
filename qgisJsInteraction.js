@@ -49,8 +49,13 @@
                 var ret = { 'label': d.label, 'value':d.v, 'properties': pprop };
             }
 
-            // Action = select QGIS features by expression
-            sendData('select', ret);
+            // Action with corresponding filtered QGIS features by expression
+            var sel = document.getElementById('dataPlotAction');
+            var actionVal = sel.value;
+            action = 'select';
+            if( actionVal )
+                action = actionVal;
+            sendData(action, ret);
 
         }
     }

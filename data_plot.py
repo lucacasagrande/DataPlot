@@ -583,6 +583,12 @@ class DataPlot:
         )
         html+= '</td></tr></table>'
 
+        html+= 'Click on the chart and <select id="dataPlotAction">'
+        html+= '<option value="select">' + self.tr('Select corresponding features') + '</option>';
+        html+= '<option value="zoom">' + self.tr('Zoom to corresponding features') + '</option>';
+        html+= '<option value="filter">' + self.tr('Filter layer with corresponding features') + '</option>';
+
+        html+= '</select> (experimental !)'
         html+= '<div id="dataPlotLog"></div>'
 
         # Add javascript code to interact with QGIS
@@ -745,7 +751,7 @@ class DataPlot:
         # show the dialog
         self.dlg.show()
         self.dlg.listWidget.setCurrentRow(0)
-
+        self.dlg.orientationCombo.setCurrentIndex(1)
         self.refreshPlotWidgets( self.dlg.plotTypeCombo.currentIndex())
 
         # Run the dialog event loop

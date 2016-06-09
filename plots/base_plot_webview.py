@@ -37,12 +37,18 @@ class plotWebView(QtWebKit.QWebView):
             self.log(pdata)
 
         if action == 'select':
-            self.selectFeatureInLayer(pdata)
+            self.selectFeaturesInLayer(pdata)
 
+        if action == 'zoom':
+            self.zoomToFeaturesInLayer(pdata)
 
-    def selectFeatureInLayer(self, pdata):
+        if action == 'filter':
+            self.filterLayerWithFeatures(pdata)
+
+    def buildLayerFilter(self, pdata, getFeatures=False):
         '''
-        Select features in source layer corresponding on passed data
+        Get the corresponding layer
+        and build an expression
         '''
         a = pdata['properties']
         b = a['name'].split('|')
@@ -66,10 +72,47 @@ class plotWebView(QtWebKit.QWebView):
             val
         )
         #print exp
-        expr = QgsExpression(exp)
-        it = layer.getFeatures( QgsFeatureRequest( expr ) )
-        ids = [i.id() for i in it]
-        layer.setSelectedFeatures( ids )
+        feats = None
+        if getFeatures:
+            expr = QgsExpression(exp)
+            feats = layer.getFeatures( QgsFeatureRequest( expr ) )
+
+        return layer, exp, feats
+
+    def selectFeaturesInLayer(self, pdata):
+        '''
+        Select features in source layer corresponding on passed data
+        '''
+
+        layer, exp, feats = self.buildLayerFilter(pdata, True)
+        fids = [f.id() for f in feats]
+        layer.setSelectedFeatures( fids )
+
+    def zoomToFeaturesInLayer(self, pdata):
+        '''
+        Select features in source layer corresponding on passed data
+        and zoom to these features
+        '''
+
+        layer, exp, feats = self.buildLayerFilter(pdata, True)
+        fids = [f.id() for f in feats]
+        layer.setSelectedFeatures( fids )
+        canvas = self.iface.mapCanvas()
+        canvas.zoomToSelected(layer)
+        layer.setSelectedFeatures([])
+
+    def filterLayerWithFeatures(self, pdata):
+        '''
+        Select features in source layer corresponding on passed data
+        and zoom to these features
+        '''
+
+        layer, exp, feats = self.buildLayerFilter(pdata, False)
+        try:
+            layer.setSubsetString( exp )
+        except:
+            print self.tr(u'Wrong filter subquery passed: %s' % exp )
+            layer.setSubsetString( '' )
 
 
     def getQgisLayerById(self, myId):
