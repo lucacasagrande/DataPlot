@@ -706,6 +706,27 @@ class DataPlot:
             )
 
 
+        if ptype == 'scatter3d':
+            color = hex_to_rgb(self.dlg.colorButton.color().name())
+            color_line = hex_to_rgb(self.dlg.colorButton2.color().name())
+            width = self.dlg.widthBox.value()
+            size = self.dlg.Size.value()
+
+            idx = self.dlg.symbolCombo.currentIndex()
+            mode = self.dlg.symbolCombo.itemData(idx)
+
+            sprop['mode'] = mode
+
+            sprop['marker'] = dict(
+                color = 'rgb' + color,
+                size = size,
+                line = dict(
+                    color = 'rgb' + str(color_line),
+                    width = width
+                )
+            )
+
+
 
         return sprop
 

@@ -177,6 +177,17 @@ class DataPlotTrace(QObject):
             trace = go.Scatter(self.plot_properties)
             self.plot_trace = trace
 
+        elif pt == 'scatter3d':
+
+            # Add needed properties
+            self.plot_properties['x'] = self.plot_data['x']
+            self.plot_properties['y'] = self.plot_data['y']
+            self.plot_properties['z'] = self.plot_data['z']
+
+            # Add plot
+            trace = go.Scatter3d(self.plot_properties)
+            self.plot_trace = trace
+
         elif pt == 'box':
 
             # Add needed properties
